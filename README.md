@@ -1,6 +1,6 @@
-# Space Exploration AI – Starter
+# astro--the-space-expo
 
-A scaffolded repo to start building a space exploration capstone. The first mini-project predicts upcoming satellite passes for a given ground location using live TLEs.
+Predicts satellite passes - tells you exactly when satellites like the International Space Station (ISS) will fly overhead and be visible from your specific location. Uses live satellite data (TLE - Two-Line Elements) from Celestrak to get real-time orbital information.
 
 ## Quickstart (Windows PowerShell)
 

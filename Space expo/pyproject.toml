@@ -1,0 +1,106 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "space-expo-satellite-predictor"
+version = "1.0.0"
+description = "High-performance satellite pass predictor with CLI and web interfaces"
+readme = "README.md"
+license = {text = "MIT"}
+requires-python = ">=3.8"
+authors = [
+    {name = "Space Explorer", email = "space.explorer@example.com"},
+]
+maintainers = [
+    {name = "Space Explorer", email = "space.explorer@example.com"},
+]
+keywords = ["satellite", "astronomy", "space", "orbital", "prediction", "tle"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Topic :: Scientific/Engineering :: Astronomy",
+    "Topic :: Scientific/Engineering :: Physics",
+]
+dependencies = [
+    "numpy>=1.26",
+    "pandas>=2.0",
+    "matplotlib>=3.8",
+    "requests>=2.31",
+    "skyfield>=1.49",
+    "sgp4>=2.22",
+    "typer>=0.12",
+    "rich>=13.7",
+    "jupyter>=1.0",
+    "streamlit>=1.40",
+    "scipy>=1.11",
+]
+
+[project.urls]
+Homepage = "https://github.com/astroyuvinut/space-expo-satellite-predictor"
+Documentation = "https://github.com/astroyuvinut/space-expo-satellite-predictor#readme"
+Repository = "https://github.com/astroyuvinut/space-expo-satellite-predictor.git"
+Issues = "https://github.com/astroyuvinut/space-expo-satellite-predictor/issues"
+Changelog = "https://github.com/astroyuvinut/space-expo-satellite-predictor/blob/main/CHANGELOG.md"
+
+[project.scripts]
+satellite-predictor = "src.orbits.pass_predictor_optimized:predict"
+
+[tool.setuptools]
+packages = ["src"]
+
+[tool.setuptools.package-dir]
+"" = "src"
+
+[tool.ruff]
+line-length = 100
+target-version = "py38"
+
+[tool.ruff.lint]
+select = [
+    "E",  # pycodestyle errors
+    "W",  # pycodestyle warnings
+    "F",  # pyflakes
+    "I",  # isort
+    "B",  # flake8-bugbear
+    "C4", # flake8-comprehensions
+    "UP", # pyupgrade
+]
+ignore = [
+    "E501", # line too long, handled by black
+    "B008", # do not perform function calls in argument defaults
+    "C901", # too complex
+]
+
+[tool.ruff.lint.per-file-ignores]
+"__init__.py" = ["F401"]
+"test_*.py" = ["B011"]  # assert false
+
+[tool.mypy]
+python_version = "3.8"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true
+disallow_incomplete_defs = true
+check_untyped_defs = true
+disallow_untyped_decorators = true
+no_implicit_optional = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+warn_no_return = true
+warn_unreachable = true
+strict_equality = true
+
+[[tool.mypy.overrides]]
+module = [
+    "skyfield.*",
+    "sgp4.*",
+]
+ignore_missing_imports = true
