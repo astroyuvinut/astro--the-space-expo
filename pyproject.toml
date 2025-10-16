@@ -44,11 +44,11 @@ dependencies = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/yourusername/space-expo-satellite-predictor"
-Documentation = "https://github.com/yourusername/space-expo-satellite-predictor#readme"
-Repository = "https://github.com/yourusername/space-expo-satellite-predictor.git"
-Issues = "https://github.com/yourusername/space-expo-satellite-predictor/issues"
-Changelog = "https://github.com/yourusername/space-expo-satellite-predictor/blob/main/CHANGELOG.md"
+Homepage = "https://github.com/astroyuvinut/space-expo-satellite-predictor"
+Documentation = "https://github.com/astroyuvinut/space-expo-satellite-predictor#readme"
+Repository = "https://github.com/astroyuvinut/space-expo-satellite-predictor.git"
+Issues = "https://github.com/astroyuvinut/space-expo-satellite-predictor/issues"
+Changelog = "https://github.com/astroyuvinut/space-expo-satellite-predictor/blob/main/CHANGELOG.md"
 
 [project.scripts]
 satellite-predictor = "src.orbits.pass_predictor_optimized:predict"
