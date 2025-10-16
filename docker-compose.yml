@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  satellite-predictor:
+    build: .
+    ports:
+      - "8501:8501"
+    environment:
+      - PYTHONUNBUFFERED=1
+    volumes:
+      - .:/app:ro
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python", "-c", "import requests; requests.get('http://localhost:8501/healthz')"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # Optional: Add a separate CLI service for batch processing
+  predictor-cli:
+    build: .
+    profiles: ["cli"]
+    command: >
+      bash -c "
+      echo 'Satellite Pass Predictor CLI' &&
+      echo 'Usage: docker-compose --profile cli run predictor-cli python -m src.orbits.pass_predictor_optimized --help'
+      "
+    volumes:
+      - .:/app:ro
