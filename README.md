@@ -32,3 +32,16 @@ streamlit run app/streamlit_app.py
 ## Next steps
 - Choose a track (EO / Orbits / Astro) and we can add the corresponding mini-project next.
 - If you pick Orbits, we can extend this into a ground-track visualizer and a simple tasking scheduler.
+
+## 👨‍💻 About the Developer
+
+**Name:** Yuva  
+**Email:** astroyuvinut@gmail.com
+
+Yuva is a computer science student and aspiring AI specialist with a focus on space exploration technologies. He is the creator of Space Exploration AI – Satellite Pass Predictor, a project that integrates orbital mechanics, real-time satellite data, and AI-driven analytics to provide accurate satellite visibility predictions.
+
+**Technical Skills:** Python, NumPy, Pandas, SciPy, Skyfield, Streamlit, Typer, Rich
+
+**Vision:** To leverage artificial intelligence to enhance astrodynamics and satellite observation, making space exploration more accessible and efficient.
+
+---
