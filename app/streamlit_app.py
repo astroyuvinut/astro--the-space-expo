@@ -7,6 +7,24 @@ from skyfield.api import EarthSatellite, load
 from src.orbits.pass_predictor import fetch_tle, compute_passes
 
 st.set_page_config(page_title="Satellite Pass Predictor", page_icon="🛰️", layout="centered")
+
+# Add menu
+menu = st.sidebar.selectbox("Menu", ["Home", "About Developer"])
+
+if menu == "Home":
+    st.title("🛰️ Satellite Pass Predictor")
+    st.caption("Compute upcoming satellite passes for your location using live TLEs (Celestrak)")
+elif menu == "About Developer":
+    st.title("👨‍💻 About the Developer")
+    st.subheader("Yuva")
+    st.write("**Email:** astroyuvinut@gmail.com")
+    st.write("Yuva is a computer science student and aspiring AI specialist with a focus on space exploration technologies. He is the creator of Space Exploration AI – Satellite Pass Predictor, a project that integrates orbital mechanics, real-time satellite data, and AI-driven analytics to provide accurate satellite visibility predictions.")
+    st.subheader("Technical Skills")
+    st.write("Python, NumPy, Pandas, SciPy, Skyfield, Streamlit, Typer, Rich")
+    st.subheader("Vision")
+    st.write("To leverage artificial intelligence to enhance astrodynamics and satellite observation, making space exploration more accessible and efficient.")
+    st.stop()  # Stop execution here for About page
+
 st.title("🛰️ Satellite Pass Predictor")
 st.caption("Compute upcoming satellite passes for your location using live TLEs (Celestrak)")
 
