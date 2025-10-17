@@ -33,5 +33,5 @@ EXPOSE 8501
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
     CMD python -c "import requests; requests.get('http://localhost:8501/healthz')" || exit 1
 
-# Default command
-CMD ["streamlit", "run", "app/streamlit_app_optimized.py", "--server.address", "0.0.0.0"]
+# Default command - Updated to use the enhanced main app
+CMD ["streamlit", "run", "app/streamlit_app.py", "--server.address", "0.0.0.0", "--server.port", "8501"]

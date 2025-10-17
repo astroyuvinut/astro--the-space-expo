@@ -8,5 +8,8 @@ typer>=0.12
 rich>=13.7
 jupyter>=1.0
 streamlit>=1.40
+streamlit-folium>=0.22
+plotly>=5.17
+folium>=0.16
 # Performance optimization dependencies
 scipy>=1.11
