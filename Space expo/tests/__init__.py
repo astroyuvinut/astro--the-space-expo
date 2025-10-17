@@ -1,1 +1,0 @@
-# Tests for Space Exploration AI - Satellite Pass Predictor
