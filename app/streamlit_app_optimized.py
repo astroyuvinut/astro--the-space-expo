@@ -18,251 +18,54 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Ultra-Modern High-Tech CSS with Cyberpunk Aesthetics
+# NASA-Inspired Professional UI Design
 st.markdown("""
 <style>
-    @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&display=swap');
-    @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;500;600;700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@300;400;500;600;700&display=swap');
 
     * {
-        font-family: 'Rajdhani', monospace;
+        font-family: 'Source Sans Pro', sans-serif;
     }
 
-    /* Cyberpunk color scheme */
+    /* NASA color scheme - professional and authoritative */
     :root {
-        --neon-blue: #00ffff;
-        --neon-pink: #ff00ff;
-        --neon-green: #00ff00;
-        --neon-orange: #ff6600;
-        --dark-bg: #0a0a0a;
-        --darker-bg: #050505;
-        --panel-bg: rgba(10, 10, 10, 0.95);
-        --border-color: rgba(0, 255, 255, 0.3);
-        --text-glow: 0 0 10px rgba(0, 255, 255, 0.5);
+        --nasa-blue: #0B3D91;
+        --nasa-red: #FC3D21;
+        --nasa-white: #FFFFFF;
+        --nasa-gray-50: #F8F9FA;
+        --nasa-gray-100: #E9ECEF;
+        --nasa-gray-200: #DEE2E6;
+        --nasa-gray-300: #CED4DA;
+        --nasa-gray-600: #6C757D;
+        --nasa-gray-800: #495057;
+        --nasa-black: #212529;
+        --shadow-light: 0 2px 4px rgba(0, 0, 0, 0.1);
+        --shadow-medium: 0 4px 8px rgba(0, 0, 0, 0.12);
+        --shadow-heavy: 0 8px 16px rgba(0, 0, 0, 0.15);
     }
 
-    /* Full cyberpunk background */
-    .cyber-bg {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background:
-            radial-gradient(circle at 20% 20%, rgba(0, 255, 255, 0.1) 0%, transparent 50%),
-            radial-gradient(circle at 80% 80%, rgba(255, 0, 255, 0.1) 0%, transparent 50%),
-            radial-gradient(circle at 40% 60%, rgba(0, 255, 0, 0.1) 0%, transparent 50%),
-            linear-gradient(45deg, var(--dark-bg) 0%, var(--darker-bg) 100%);
-        z-index: -2;
-    }
-
-    /* Animated grid overlay */
-    .grid-overlay {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-image:
-            linear-gradient(rgba(0, 255, 255, 0.1) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(0, 255, 255, 0.1) 1px, transparent 1px);
-        background-size: 50px 50px;
-        animation: gridMove 20s linear infinite;
-        z-index: -1;
-    }
-
-    @keyframes gridMove {
-        0% { transform: translate(0, 0); }
-        100% { transform: translate(50px, 50px); }
+    /* Clean NASA-inspired background */
+    .nasa-bg {
+        background: linear-gradient(135deg, var(--nasa-gray-50) 0%, var(--nasa-white) 100%);
+        min-height: 100vh;
     }
 
     .main-header {
-        background: linear-gradient(45deg, var(--neon-blue), var(--neon-pink), var(--neon-green));
-        background-size: 300% 300%;
+        background: linear-gradient(135deg, var(--nasa-blue), var(--nasa-red));
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
-        animation: gradientShift 3s ease-in-out infinite, glitchText 2s linear infinite;
-        font-size: 4rem;
+        font-size: 3.5rem;
         font-weight: 700;
         text-align: center;
         margin-bottom: 1rem;
-        text-shadow: var(--text-glow);
-        font-family: 'JetBrains Mono', monospace;
-        letter-spacing: 2px;
+        animation: fadeInUp 1s ease-out;
+        letter-spacing: -0.5px;
     }
 
-    @keyframes gradientShift {
-        0%, 100% { background-position: 0% 50%; }
-        50% { background-position: 100% 50%; }
-    }
-
-    @keyframes glitchText {
-        0%, 100% { transform: translateX(0); }
-        10% { transform: translateX(-2px); }
-        20% { transform: translateX(2px); }
-        30% { transform: translateX(-1px); }
-        40% { transform: translateX(1px); }
-        50% { transform: translateX(0); }
-    }
-
-    .metric-card {
-        background: var(--panel-bg);
-        border: 1px solid var(--border-color);
-        border-radius: 15px;
-        padding: 2rem;
-        color: var(--neon-blue);
-        text-align: center;
-        box-shadow:
-            0 0 20px rgba(0, 255, 255, 0.2),
-            inset 0 0 20px rgba(0, 255, 255, 0.1);
-        position: relative;
-        overflow: hidden;
-        animation: cardGlow 2s ease-in-out infinite alternate;
-    }
-
-    .metric-card::before {
-        content: '';
-        position: absolute;
-        top: -2px;
-        left: -2px;
-        right: -2px;
-        bottom: -2px;
-        background: linear-gradient(45deg, var(--neon-blue), var(--neon-pink), var(--neon-green), var(--neon-blue));
-        border-radius: 15px;
-        z-index: -1;
-        animation: borderGlow 3s linear infinite;
-    }
-
-    @keyframes cardGlow {
-        from { box-shadow: 0 0 20px rgba(0, 255, 255, 0.2), inset 0 0 20px rgba(0, 255, 255, 0.1); }
-        to { box-shadow: 0 0 30px rgba(0, 255, 255, 0.4), inset 0 0 30px rgba(0, 255, 255, 0.2); }
-    }
-
-    @keyframes borderGlow {
-        0% { opacity: 0.5; }
-        50% { opacity: 1; }
-        100% { opacity: 0.5; }
-    }
-
-    .sidebar-header {
-        background: linear-gradient(45deg, var(--neon-pink), var(--neon-blue));
-        background-size: 200% 200%;
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        animation: gradientShift 2s ease-in-out infinite;
-        font-size: 2rem;
-        font-weight: 700;
-        text-shadow: var(--text-glow);
-        font-family: 'JetBrains Mono', monospace;
-    }
-
-    .stButton>button {
-        background: var(--panel-bg);
-        border: 2px solid var(--neon-blue);
-        color: var(--neon-blue);
-        border-radius: 25px;
-        padding: 1.2rem 3rem;
-        font-weight: 600;
-        font-size: 1.2rem;
-        font-family: 'JetBrains Mono', monospace;
-        text-transform: uppercase;
-        letter-spacing: 1px;
-        transition: all 0.3s ease;
-        box-shadow: 0 0 15px rgba(0, 255, 255, 0.3);
-        position: relative;
-        overflow: hidden;
-    }
-
-    .stButton>button::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: -100%;
-        width: 100%;
-        height: 100%;
-        background: linear-gradient(90deg, transparent, rgba(0, 255, 255, 0.2), transparent);
-        transition: left 0.5s;
-    }
-
-    .stButton>button:hover {
-        border-color: var(--neon-pink);
-        color: var(--neon-pink);
-        box-shadow: 0 0 25px rgba(255, 0, 255, 0.5);
-        transform: translateY(-2px);
-    }
-
-    .stButton>button:hover::before {
-        left: 100%;
-    }
-
-    .stButton>button:active {
-        transform: translateY(0);
-        box-shadow: 0 0 15px rgba(255, 0, 255, 0.3);
-    }
-
-    .dataframe-container {
-        background: var(--panel-bg);
-        border: 1px solid var(--border-color);
-        border-radius: 10px;
-        padding: 1rem;
-        animation: dataFadeIn 0.8s ease-out;
-        box-shadow: 0 0 20px rgba(0, 255, 255, 0.1);
-    }
-
-    @keyframes dataFadeIn {
+    @keyframes fadeInUp {
         from {
             opacity: 0;
-            transform: scale(0.95) translateY(20px);
-        }
-        to {
-            opacity: 1;
-            transform: scale(1) translateY(0);
-        }
-    }
-
-    .stProgress > div > div > div > div {
-        background: linear-gradient(45deg, var(--neon-blue), var(--neon-pink));
-        border-radius: 5px;
-        animation: progressGlow 1.5s ease-in-out infinite alternate;
-        box-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
-    }
-
-    @keyframes progressGlow {
-        from { box-shadow: 0 0 10px rgba(0, 255, 255, 0.5); }
-        to { box-shadow: 0 0 20px rgba(0, 255, 255, 0.8); }
-    }
-
-    .stInfo, .stSuccess, .stWarning, .stError {
-        background: var(--panel-bg) !important;
-        border: 1px solid var(--border-color) !important;
-        border-radius: 10px !important;
-        color: var(--neon-blue) !important;
-        box-shadow: 0 0 15px rgba(0, 255, 255, 0.2) !important;
-        animation: alertGlow 2s ease-in-out infinite alternate;
-    }
-
-    @keyframes alertGlow {
-        from { box-shadow: 0 0 15px rgba(0, 255, 255, 0.2); }
-        to { box-shadow: 0 0 25px rgba(0, 255, 255, 0.4); }
-    }
-
-    .stDataFrame {
-        background: var(--panel-bg) !important;
-        border: 1px solid var(--border-color) !important;
-        border-radius: 10px !important;
-        box-shadow: 0 0 20px rgba(0, 255, 255, 0.1) !important;
-        animation: tableSlideIn 1s ease-out;
-    }
-
-    .stDataFrame th, .stDataFrame td {
-        color: var(--neon-blue) !important;
-        border-color: var(--border-color) !important;
-    }
-
-    @keyframes tableSlideIn {
-        from {
-            opacity: 0;
-            transform: translateY(30px);
+            transform: translateY(20px);
         }
         to {
             opacity: 1;
@@ -270,268 +73,443 @@ st.markdown("""
         }
     }
 
-    .sidebar .sidebar-content {
-        background: var(--panel-bg) !important;
-        border: 1px solid var(--border-color) !important;
-        border-radius: 15px !important;
-        box-shadow: 0 0 20px rgba(0, 255, 255, 0.1) !important;
-    }
-
-    .stSelectbox, .stNumberInput, .stSlider, .stTextInput {
-        background: var(--panel-bg) !important;
-        border: 1px solid var(--border-color) !important;
-        border-radius: 8px !important;
-        color: var(--neon-blue) !important;
-        animation: inputGlow 0.5s ease-out;
-    }
-
-    .stSelectbox:hover, .stNumberInput:hover, .stSlider:hover, .stTextInput:hover {
-        border-color: var(--neon-pink) !important;
-        box-shadow: 0 0 10px rgba(255, 0, 255, 0.3) !important;
-    }
-
-    @keyframes inputGlow {
-        from { box-shadow: 0 0 0 rgba(0, 255, 255, 0.3); }
-        to { box-shadow: 0 0 10px rgba(0, 255, 255, 0.3); }
-    }
-
-    /* Custom scrollbar - cyberpunk style */
-    ::-webkit-scrollbar {
-        width: 12px;
-    }
-
-    ::-webkit-scrollbar-track {
-        background: var(--dark-bg);
-        border: 1px solid var(--border-color);
-    }
-
-    ::-webkit-scrollbar-thumb {
-        background: linear-gradient(45deg, var(--neon-blue), var(--neon-pink));
-        border-radius: 6px;
-        box-shadow: 0 0 5px rgba(0, 255, 255, 0.5);
-    }
-
-    ::-webkit-scrollbar-thumb:hover {
-        background: linear-gradient(45deg, var(--neon-pink), var(--neon-green));
-        box-shadow: 0 0 10px rgba(255, 0, 255, 0.8);
-    }
-
-    /* Holographic text effect */
-    .hologram {
-        background: linear-gradient(45deg, var(--neon-blue), var(--neon-pink), var(--neon-green));
-        background-size: 200% 200%;
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        animation: hologramShift 2s ease-in-out infinite;
-    }
-
-    @keyframes hologramShift {
-        0%, 100% { background-position: 0% 50%; }
-        50% { background-position: 100% 50%; }
-    }
-
-    /* Glitch effect for special elements */
-    .glitch {
+    .metric-card {
+        background: var(--nasa-white);
+        border: 2px solid var(--nasa-gray-200);
+        border-radius: 8px;
+        padding: 1.5rem;
+        box-shadow: var(--shadow-medium);
+        transition: all 0.3s ease;
+        animation: slideInUp 0.6s ease-out;
         position: relative;
-        animation: glitch 1s linear infinite;
     }
 
-    .glitch::before, .glitch::after {
-        content: attr(data-text);
+    .metric-card:hover {
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-heavy);
+        border-color: var(--nasa-blue);
+    }
+
+    .metric-card::before {
+        content: '';
         position: absolute;
         top: 0;
         left: 0;
-        width: 100%;
+        width: 4px;
         height: 100%;
+        background: linear-gradient(to bottom, var(--nasa-blue), var(--nasa-red));
+        border-radius: 4px 0 0 4px;
     }
 
-    .glitch::before {
-        animation: glitch-1 0.5s infinite;
-        color: var(--neon-pink);
-        z-index: -1;
+    @keyframes slideInUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
     }
 
-    .glitch::after {
-        animation: glitch-2 0.5s infinite;
-        color: var(--neon-green);
-        z-index: -2;
+    .sidebar-header {
+        color: var(--nasa-blue);
+        font-size: 1.4rem;
+        font-weight: 600;
+        margin-bottom: 1rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 3px solid var(--nasa-red);
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
     }
 
-    @keyframes glitch {
-        0%, 100% { transform: translate(0); }
-        20% { transform: translate(-2px, 2px); }
-        40% { transform: translate(-2px, -2px); }
-        60% { transform: translate(2px, 2px); }
-        80% { transform: translate(2px, -2px); }
+    .stButton>button {
+        background: linear-gradient(135deg, var(--nasa-blue), var(--nasa-red));
+        color: var(--nasa-white);
+        border: none;
+        border-radius: 6px;
+        padding: 0.875rem 2rem;
+        font-weight: 600;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+        box-shadow: var(--shadow-medium);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
     }
 
-    @keyframes glitch-1 {
-        0%, 100% { transform: translate(0); }
-        20% { transform: translate(-2px, 2px); }
-        40% { transform: translate(-2px, -2px); }
-        60% { transform: translate(2px, 2px); }
-        80% { transform: translate(2px, -2px); }
+    .stButton>button:hover {
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-heavy);
+        background: linear-gradient(135deg, var(--nasa-red), var(--nasa-blue));
     }
 
-    @keyframes glitch-2 {
-        0%, 100% { transform: translate(0); }
-        20% { transform: translate(2px, -2px); }
-        40% { transform: translate(2px, 2px); }
-        60% { transform: translate(-2px, -2px); }
-        80% { transform: translate(-2px, 2px); }
+    .stButton>button:active {
+        transform: translateY(0);
     }
 
-    /* Neon glow text */
-    .neon-text {
-        color: var(--neon-blue);
-        text-shadow: var(--text-glow);
-        animation: neonPulse 2s ease-in-out infinite alternate;
+    .dataframe-container {
+        background: var(--nasa-white);
+        border: 1px solid var(--nasa-gray-200);
+        border-radius: 8px;
+        padding: 1rem;
+        box-shadow: var(--shadow-light);
+        animation: fadeIn 0.8s ease-out;
     }
 
-    @keyframes neonPulse {
-        from { text-shadow: 0 0 5px rgba(0, 255, 255, 0.5); }
-        to { text-shadow: 0 0 20px rgba(0, 255, 255, 0.8), 0 0 30px rgba(0, 255, 255, 0.6); }
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+
+    .stProgress > div > div > div > div {
+        background: linear-gradient(135deg, var(--nasa-blue), var(--nasa-red));
+        border-radius: 3px;
+        transition: all 0.3s ease;
+        box-shadow: 0 0 4px rgba(11, 61, 145, 0.3);
+    }
+
+    .stInfo, .stSuccess, .stWarning, .stError {
+        border-radius: 8px !important;
+        border: 1px solid var(--nasa-gray-200) !important;
+        box-shadow: var(--shadow-light) !important;
+        animation: slideInRight 0.5s ease-out;
+    }
+
+    .stInfo {
+        background: linear-gradient(135deg, var(--nasa-gray-50), var(--nasa-white)) !important;
+        border-left: 4px solid var(--nasa-blue) !important;
+    }
+
+    .stSuccess {
+        background: linear-gradient(135deg, #f0fdf4, #ffffff) !important;
+        border-left: 4px solid #10b981 !important;
+    }
+
+    .stWarning {
+        background: linear-gradient(135deg, #fffbeb, #ffffff) !important;
+        border-left: 4px solid #f59e0b !important;
+    }
+
+    .stError {
+        background: linear-gradient(135deg, #fef2f2, #ffffff) !important;
+        border-left: 4px solid var(--nasa-red) !important;
+    }
+
+    @keyframes slideInRight {
+        from {
+            opacity: 0;
+            transform: translateX(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+
+    .stDataFrame {
+        border-radius: 8px !important;
+        border: 1px solid var(--nasa-gray-200) !important;
+        box-shadow: var(--shadow-light) !important;
+        animation: tableFadeIn 0.8s ease-out;
+    }
+
+    .stDataFrame th {
+        background: linear-gradient(135deg, var(--nasa-blue), var(--nasa-red)) !important;
+        color: var(--nasa-white) !important;
+        font-weight: 600 !important;
+        text-transform: uppercase !important;
+        letter-spacing: 0.5px !important;
+        font-size: 0.875rem !important;
+    }
+
+    .stDataFrame td {
+        border-bottom: 1px solid var(--nasa-gray-200) !important;
+    }
+
+    @keyframes tableFadeIn {
+        from {
+            opacity: 0;
+            transform: scale(0.98);
+        }
+        to {
+            opacity: 1;
+            transform: scale(1);
+        }
+    }
+
+    .sidebar .sidebar-content {
+        background: var(--nasa-white) !important;
+        border: 1px solid var(--nasa-gray-200) !important;
+        border-radius: 12px !important;
+        box-shadow: var(--shadow-medium) !important;
+        padding: 1.5rem !important;
+    }
+
+    .stSelectbox, .stNumberInput, .stSlider, .stTextInput {
+        border: 2px solid var(--nasa-gray-300) !important;
+        border-radius: 6px !important;
+        transition: all 0.3s ease;
+        background: var(--nasa-white) !important;
+    }
+
+    .stSelectbox:hover, .stNumberInput:hover, .stSlider:hover, .stTextInput:hover {
+        border-color: var(--nasa-blue) !important;
+        box-shadow: 0 0 0 3px rgba(11, 61, 145, 0.1) !important;
+    }
+
+    .stSelectbox:focus, .stNumberInput:focus, .stSlider:focus, .stTextInput:focus {
+        border-color: var(--nasa-red) !important;
+        box-shadow: 0 0 0 3px rgba(252, 61, 33, 0.1) !important;
+    }
+
+    /* Professional scrollbar */
+    ::-webkit-scrollbar {
+        width: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+        background: var(--nasa-gray-100);
+        border-radius: 4px;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background: linear-gradient(135deg, var(--nasa-blue), var(--nasa-red));
+        border-radius: 4px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+        background: linear-gradient(135deg, var(--nasa-red), var(--nasa-blue));
+    }
+
+    /* NASA-style section headers */
+    .section-header {
+        color: var(--nasa-black);
+        font-size: 1.25rem;
+        font-weight: 600;
+        margin: 2rem 0 1rem 0;
+        padding-bottom: 0.5rem;
+        border-bottom: 2px solid var(--nasa-red);
+        display: flex;
+        align-items: center;
+    }
+
+    .section-header::before {
+        content: '';
+        width: 6px;
+        height: 6px;
+        background: var(--nasa-blue);
+        border-radius: 50%;
+        margin-right: 0.75rem;
+    }
+
+    /* NASA-style form labels */
+    .form-label {
+        color: var(--nasa-gray-800);
+        font-size: 0.9rem;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+        display: block;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    /* NASA-style info boxes */
+    .info-box {
+        background: linear-gradient(135deg, var(--nasa-gray-50), var(--nasa-white));
+        border: 1px solid var(--nasa-gray-200);
+        border-left: 4px solid var(--nasa-blue);
+        border-radius: 8px;
+        padding: 1.25rem;
+        margin: 1rem 0;
+        box-shadow: var(--shadow-light);
+    }
+
+    .info-box h4 {
+        color: var(--nasa-blue);
+        margin: 0 0 0.75rem 0;
+        font-size: 1.1rem;
+        font-weight: 600;
+    }
+
+    .info-box p {
+        color: var(--nasa-gray-600);
+        margin: 0;
+        font-size: 0.95rem;
+        line-height: 1.6;
+    }
+
+    /* NASA-style status indicators */
+    .status-indicator {
+        display: inline-block;
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        margin-right: 0.5rem;
+        animation: pulse 2s infinite;
+    }
+
+    .status-online {
+        background: #10b981;
+        box-shadow: 0 0 6px rgba(16, 185, 129, 0.4);
+    }
+
+    .status-active {
+        background: var(--nasa-blue);
+        box-shadow: 0 0 6px rgba(11, 61, 145, 0.4);
+    }
+
+    .status-standby {
+        background: #f59e0b;
+        box-shadow: 0 0 6px rgba(245, 158, 11, 0.4);
+    }
+
+    @keyframes pulse {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.6; }
+    }
+
+    /* NASA logo-inspired elements */
+    .nasa-accent {
+        position: relative;
+    }
+
+    .nasa-accent::after {
+        content: '';
+        position: absolute;
+        bottom: -2px;
+        left: 0;
+        width: 30px;
+        height: 3px;
+        background: linear-gradient(90deg, var(--nasa-blue), var(--nasa-red));
+        border-radius: 2px;
     }
 </style>
 """, unsafe_allow_html=True)
 
-# Add cyberpunk background elements
-st.markdown('<div class="cyber-bg"></div>', unsafe_allow_html=True)
-st.markdown('<div class="grid-overlay"></div>', unsafe_allow_html=True)
+# Clean NASA-inspired background
+st.markdown('<div class="nasa-bg"></div>', unsafe_allow_html=True)
 
 # Add particle background
 st.markdown('<div class="particle-bg"></div>', unsafe_allow_html=True)
 
-# Cyberpunk main header with holographic effects
-st.markdown('<h1 class="main-header glitch" data-text="🛰️ SATELLITE PASS PREDICTOR PRO">🛰️ SATELLITE PASS PREDICTOR PRO</h1>', unsafe_allow_html=True)
-st.markdown('<p class="neon-text" style="text-align: center; font-size: 1.2rem; margin-bottom: 2rem;">⚡ ADVANCED ORBITAL TRACKING SYSTEM | REAL-TIME TLE DATA | NEURAL PREDICTIONS ⚡</p>', unsafe_allow_html=True)
+# NASA-inspired professional header
+st.markdown('<h1 class="main-header nasa-accent">🛰️ Satellite Pass Predictor</h1>', unsafe_allow_html=True)
+st.markdown('<p style="text-align: center; font-size: 1.1rem; color: var(--nasa-gray-600); margin-bottom: 2rem; font-weight: 400;">National Aeronautics and Space Administration | Orbital Tracking System</p>', unsafe_allow_html=True)
 
-# Cyberpunk status indicators
+# NASA-style status dashboard
 col1, col2, col3, col4 = st.columns(4)
 with col1:
-    st.markdown('<div style="text-align: center;"><div class="neon-text">🔴 SYSTEM</div><div style="color: var(--neon-green);">ONLINE</div></div>', unsafe_allow_html=True)
+    st.markdown('<div style="text-align: center; padding: 1rem; background: white; border-radius: 8px; box-shadow: var(--shadow-light);"><div style="display: flex; align-items: center; justify-content: center; margin-bottom: 0.5rem;"><span class="status-indicator status-online"></span><strong style="color: var(--nasa-gray-800);">SYSTEM</strong></div><div style="color: #10b981; font-weight: 500;">ONLINE</div></div>', unsafe_allow_html=True)
 with col2:
-    st.markdown('<div style="text-align: center;"><div class="neon-text">📡 TLE</div><div style="color: var(--neon-blue);">SYNCED</div></div>', unsafe_allow_html=True)
+    st.markdown('<div style="text-align: center; padding: 1rem; background: white; border-radius: 8px; box-shadow: var(--shadow-light);"><div style="display: flex; align-items: center; justify-content: center; margin-bottom: 0.5rem;"><span class="status-indicator status-active"></span><strong style="color: var(--nasa-gray-800);">TLE DATA</strong></div><div style="color: var(--nasa-blue); font-weight: 500;">SYNCED</div></div>', unsafe_allow_html=True)
 with col3:
-    st.markdown('<div style="text-align: center;"><div class="neon-text">🧠 AI</div><div style="color: var(--neon-pink);">ACTIVE</div></div>', unsafe_allow_html=True)
+    st.markdown('<div style="text-align: center; padding: 1rem; background: white; border-radius: 8px; box-shadow: var(--shadow-light);"><div style="display: flex; align-items: center; justify-content: center; margin-bottom: 0.5rem;"><span class="status-indicator status-active"></span><strong style="color: var(--nasa-gray-800);">ORBITAL</strong></div><div style="color: var(--nasa-blue); font-weight: 500;">ENGAGED</div></div>', unsafe_allow_html=True)
 with col4:
-    st.markdown('<div style="text-align: center;"><div class="neon-text">🚀 READY</div><div style="color: var(--neon-orange);">STANDBY</div></div>', unsafe_allow_html=True)
+    st.markdown('<div style="text-align: center; padding: 1rem; background: white; border-radius: 8px; box-shadow: var(--shadow-light);"><div style="display: flex; align-items: center; justify-content: center; margin-bottom: 0.5rem;"><span class="status-indicator status-standby"></span><strong style="color: var(--nasa-gray-800);">STATUS</strong></div><div style="color: #f59e0b; font-weight: 500;">STANDBY</div></div>', unsafe_allow_html=True)
 
-# Holographic welcome message
+# NASA-style mission briefing
 st.markdown("""
-<div style="text-align: center; margin: 2rem 0; padding: 2rem; background: var(--panel-bg); border: 1px solid var(--border-color); border-radius: 15px; box-shadow: 0 0 30px rgba(0, 255, 255, 0.2);">
-    <div class="hologram" style="font-size: 1.5rem; font-weight: 600; margin-bottom: 1rem;">
-        🌟 INITIALIZING COSMIC INTERFACE 🌟
-    </div>
-    <div style="color: var(--neon-blue); font-size: 1.1rem;">
-        Neural networks calibrated • Orbital mechanics engaged • Ready for deployment
-    </div>
+<div class="info-box">
+    <h4>🚀 Mission Control Center</h4>
+    <p>Orbital prediction algorithms initialized • Real-time TLE database connected • Scientific computing systems ready for satellite trajectory calculations and pass predictions.</p>
 </div>
 """, unsafe_allow_html=True)
 
-# Cyberpunk sidebar with neural interface design
+# NASA Mission Control sidebar
 with st.sidebar:
-    st.markdown('<h2 class="sidebar-header">🧠 NEURAL CONTROL MATRIX</h2>', unsafe_allow_html=True)
-    st.markdown('<div style="height: 2px; background: linear-gradient(90deg, var(--neon-blue), var(--neon-pink)); margin: 1rem 0; border-radius: 1px;"></div>', unsafe_allow_html=True)
+    st.markdown('<h2 class="sidebar-header">📡 Mission Control</h2>', unsafe_allow_html=True)
 
-    # Neural location matrix
-    st.markdown('<div class="neon-text" style="font-size: 1.1rem; margin-bottom: 1rem;">📍 GEOSPATIAL COORDINATES</div>', unsafe_allow_html=True)
+    # NASA geospatial coordinates
+    st.markdown('<div class="section-header">📍 Observer Location</div>', unsafe_allow_html=True)
 
     col1, col2 = st.columns(2)
     with col1:
-        st.markdown('<label class="neon-text" style="font-size: 0.9rem;">LATITUDE MATRIX</label>', unsafe_allow_html=True)
+        st.markdown('<label class="form-label">Latitude (°)</label>', unsafe_allow_html=True)
         lat = st.number_input(
-            "",
+            "Latitude",
             value=28.6139,
             min_value=-90.0,
             max_value=90.0,
             format="%.6f",
-            help="Neural latitude processing unit",
-            label_visibility="collapsed"
+            help="Observer latitude in decimal degrees (-90 to 90)"
         )
     with col2:
-        st.markdown('<label class="neon-text" style="font-size: 0.9rem;">LONGITUDE MATRIX</label>', unsafe_allow_html=True)
+        st.markdown('<label class="form-label">Longitude (°)</label>', unsafe_allow_html=True)
         lon = st.number_input(
-            "",
+            "Longitude",
             value=77.2090,
             min_value=-180.0,
             max_value=180.0,
             format="%.6f",
-            help="Neural longitude processing unit",
-            label_visibility="collapsed"
+            help="Observer longitude in decimal degrees (-180 to 180)"
         )
 
-    st.markdown('<label class="neon-text" style="font-size: 0.9rem;">ALTITUDE PROCESSOR</label>', unsafe_allow_html=True)
+    st.markdown('<label class="form-label">Altitude (m)</label>', unsafe_allow_html=True)
     alt_m = st.number_input(
-        "",
+        "Altitude",
         value=0.0,
         min_value=-1000.0,
         step=10.0,
-        help="Quantum altitude calibration",
-        label_visibility="collapsed"
+        help="Observer altitude above sea level in meters"
     )
 
-    # Temporal processing matrix
-    st.markdown('<div class="neon-text" style="font-size: 1.1rem; margin: 2rem 0 1rem 0;">⏰ TEMPORAL PROCESSING MATRIX</div>', unsafe_allow_html=True)
+    # NASA temporal parameters
+    st.markdown('<div class="section-header">⏰ Prediction Parameters</div>', unsafe_allow_html=True)
 
-    st.markdown('<label class="neon-text" style="font-size: 0.9rem;">PREDICTION HORIZON</label>', unsafe_allow_html=True)
+    st.markdown('<label class="form-label">Search Window (hours)</label>', unsafe_allow_html=True)
     hours = st.slider(
-        "",
+        "Search Window",
         min_value=1,
         max_value=72,
         value=24,
-        help="Quantum temporal prediction window",
-        label_visibility="collapsed"
+        help="How far ahead to predict satellite passes"
     )
 
-    st.markdown('<label class="neon-text" style="font-size: 0.9rem;">ELEVATION THRESHOLD</label>', unsafe_allow_html=True)
+    st.markdown('<label class="form-label">Minimum Elevation (°)</label>', unsafe_allow_html=True)
     min_elev = st.slider(
-        "",
+        "Minimum Elevation",
         min_value=0,
         max_value=90,
         value=10,
-        help="Neural elevation filtering algorithm",
-        label_visibility="collapsed"
+        help="Minimum elevation angle for visible passes"
     )
 
-    # Orbital target selection matrix
-    st.markdown('<div class="neon-text" style="font-size: 1.1rem; margin: 2rem 0 1rem 0;">🛰️ ORBITAL TARGET MATRIX</div>', unsafe_allow_html=True)
+    # NASA satellite database
+    st.markdown('<div class="section-header">🛰️ Satellite Selection</div>', unsafe_allow_html=True)
 
     satellite_presets = {
-        "🌍 ISS | International Space Station": 25544,
-        "🔭 HST | Hubble Space Telescope": 20580,
-        "📡 SLK | Starlink-1007": 44713,
-        "🌦️ N18 | NOAA-18 Weather": 28654,
-        "🛰️ TER | TERRA Earth Obs": 25994,
-        "🛰️ AQU | AQUA Earth Obs": 27424,
-        "🛰️ SNP | SUOMI NPP": 37849,
-        "🛰️ L8 | Landsat 8": 39084,
-        "🛰️ S2A | Sentinel-2A": 40697,
-        "🛰️ CUSTOM | Neural Input": None
+        "🌍 ISS (International Space Station)": 25544,
+        "🔭 Hubble Space Telescope": 20580,
+        "📡 Starlink-1007": 44713,
+        "🌦️ NOAA-18 (Weather)": 28654,
+        "🛰️ TERRA (Earth Observation)": 25994,
+        "🛰️ AQUA (Earth Observation)": 27424,
+        "🛰️ SUOMI NPP": 37849,
+        "🛰️ Landsat 8": 39084,
+        "🛰️ Sentinel-2A": 40697,
+        "🛰️ Custom NORAD ID": None
     }
 
-    st.markdown('<label class="neon-text" style="font-size: 0.9rem;">SATELLITE DATABASE</label>', unsafe_allow_html=True)
+    st.markdown('<label class="form-label">Select Satellite</label>', unsafe_allow_html=True)
     selected_satellite = st.selectbox(
-        "",
+        "Select Satellite",
         options=list(satellite_presets.keys()),
         index=0,
-        help="Quantum satellite selection matrix",
-        label_visibility="collapsed"
+        help="Choose from tracked satellites or enter custom NORAD ID"
     )
 
     if satellite_presets[selected_satellite] is None:
-        st.markdown('<label class="neon-text" style="font-size: 0.9rem;">NORAD ID INPUT</label>', unsafe_allow_html=True)
+        st.markdown('<label class="form-label">NORAD Catalog ID</label>', unsafe_allow_html=True)
         norad = st.number_input(
-            "",
+            "NORAD ID",
             value=25544,
             step=1,
             min_value=1,
-            help="Direct neural NORAD interface",
-            label_visibility="collapsed"
+            help="Enter satellite NORAD catalog number"
         )
     else:
         norad = satellite_presets[selected_satellite]
-        st.markdown(f'<div style="background: var(--panel-bg); border: 1px solid var(--neon-green); padding: 0.5rem; border-radius: 5px; text-align: center; margin: 0.5rem 0;"><span class="neon-text">NORAD ID: {norad}</span></div>', unsafe_allow_html=True)
+        st.info(f"**NORAD ID:** {norad}")
 
     # Advanced settings in collapsible section
     with st.expander("⚙️ Advanced Settings", expanded=False):
@@ -546,28 +524,22 @@ with st.sidebar:
 
         st.caption("💡 **Pro Tip:** Lower resolution for quick scans, higher for precision tracking")
 
-    # Neural launch sequence
-    st.markdown('<div style="height: 2px; background: linear-gradient(90deg, var(--neon-blue), var(--neon-pink)); margin: 2rem 0; border-radius: 1px;"></div>', unsafe_allow_html=True)
+    # NASA launch sequence
+    st.markdown("---")
 
     col1, col2, col3 = st.columns([1, 2, 1])
     with col2:
-        go = st.button("🚀 INITIATE NEURAL PREDICTION", type="primary", use_container_width=True)
+        go = st.button("🚀 Calculate Satellite Passes", type="primary", use_container_width=True)
 
-        # Cyberpunk status indicator
+        # NASA status indicator
         if not go:
             st.markdown("""
             <div style="text-align: center; margin-top: 1rem;">
-                <div class="neon-text" style="font-size: 0.9rem; margin-bottom: 0.5rem;">SYSTEM STATUS</div>
-                <div style="display: inline-block; padding: 0.5rem 1rem; background: var(--panel-bg); border: 1px solid var(--neon-orange); border-radius: 20px; animation: statusPulse 3s ease-in-out infinite;">
-                    <span style="color: var(--neon-orange);">🔄 STANDBY MODE</span>
+                <div style="color: var(--nasa-gray-600); font-size: 0.9rem; margin-bottom: 0.5rem;">System Status</div>
+                <div style="display: inline-block; padding: 0.5rem 1rem; background: white; border: 1px solid var(--nasa-gray-300); border-radius: 8px; box-shadow: var(--shadow-light);">
+                    <span style="color: #f59e0b;">⏳ Ready for Launch</span>
                 </div>
             </div>
-            <style>
-            @keyframes statusPulse {
-                0%, 100% { border-color: var(--neon-orange); box-shadow: 0 0 10px rgba(255, 102, 0, 0.3); }
-                50% { border-color: var(--neon-pink); box-shadow: 0 0 20px rgba(255, 0, 255, 0.5); }
-            }
-            </style>
             """, unsafe_allow_html=True)
 
     # Real-time status indicator with enhanced animations
