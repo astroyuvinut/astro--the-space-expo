@@ -4,20 +4,21 @@ Simple test to demonstrate the optimization improvements.
 """
 
 import time
-import datetime as dt
+
 from skyfield.api import EarthSatellite, load
 
-# Import both versions
-from src.orbits.pass_predictor import fetch_tle as fetch_tle_original
 from src.orbits.pass_predictor import compute_passes as compute_passes_original
-from src.orbits.pass_predictor_optimized import fetch_tle_cached, compute_passes_optimized
+
+# Import both versions
+from src.orbits.pass_predictor_optimized import compute_passes_optimized, fetch_tle_cached
+
 
 def test_performance():
     """Test performance comparison between original and optimized versions."""
     print("=" * 60)
     print("SATELLITE PASS PREDICTOR OPTIMIZATION TEST")
     print("=" * 60)
-    
+
     # Test parameters
     lat = 28.6139  # New Delhi
     lon = 77.2090
@@ -25,22 +26,22 @@ def test_performance():
     hours = 24
     min_elev = 5.0
     norad = 25544  # ISS
-    
+
     print(f"Location: {lat:.4f}°N, {lon:.4f}°E")
     print(f"Search window: {hours} hours")
     print(f"Minimum elevation: {min_elev}°")
     print(f"Satellite: NORAD {norad} (ISS)")
     print()
-    
+
     # Fetch TLE data
     print("Fetching TLE data...")
     name, l1, l2 = fetch_tle_cached(norad)
     print(f"Satellite: {name}")
-    
+
     # Create satellite object
     ts = load.timescale()
     sat = EarthSatellite(l1, l2, name, ts)
-    
+
     # Test original implementation
     print("\n" + "-" * 40)
     print("TESTING ORIGINAL IMPLEMENTATION")
@@ -48,10 +49,10 @@ def test_performance():
     start_time = time.time()
     original_passes = compute_passes_original(sat, lat, lon, alt_m, hours, min_elev)
     original_time = time.time() - start_time
-    
+
     print(f"Execution time: {original_time:.3f} seconds")
     print(f"Passes found: {len(original_passes)}")
-    
+
     # Test optimized implementation
     print("\n" + "-" * 40)
     print("TESTING OPTIMIZED IMPLEMENTATION")
@@ -59,17 +60,17 @@ def test_performance():
     start_time = time.time()
     optimized_passes = compute_passes_optimized(sat, lat, lon, alt_m, hours, min_elev)
     optimized_time = time.time() - start_time
-    
+
     print(f"Execution time: {optimized_time:.3f} seconds")
     print(f"Passes found: {len(optimized_passes)}")
-    
+
     # Calculate improvement
     if optimized_time > 0:
         speedup = original_time / optimized_time
         time_saved = original_time - optimized_time
         print(f"\nSPEEDUP: {speedup:.2f}x faster")
         print(f"TIME SAVED: {time_saved:.3f} seconds")
-    
+
     # Verify accuracy
     passes_match = len(original_passes) == len(optimized_passes)
     if passes_match and original_passes:
@@ -80,12 +81,12 @@ def test_performance():
             if start_diff > tolerance_minutes:
                 passes_match = False
                 break
-    
+
     print(f"ACCURACY: {'VERIFIED' if passes_match else 'MISMATCH'}")
-    
+
     # Display passes
     if optimized_passes:
-        print(f"\n" + "-" * 40)
+        print("\n" + "-" * 40)
         print("UPCOMING PASSES (Optimized Results)")
         print("-" * 40)
         for i, p in enumerate(optimized_passes, 1):
@@ -97,7 +98,7 @@ def test_performance():
             print(f"  Max Elevation: {p.max_elevation_deg:.1f}°")
             print(f"  Duration: {duration:.1f} minutes")
             print()
-    
+
     print("=" * 60)
     print("OPTIMIZATION SUMMARY")
     print("=" * 60)
