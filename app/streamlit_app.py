@@ -1,19 +1,14 @@
 import datetime as dt
 import time
-import threading
-import asyncio
-from typing import Optional, Dict, Any
 
 import folium
 import pandas as pd
-import streamlit as st
 import plotly.graph_objects as go
-import plotly.express as px
+import streamlit as st
 from skyfield.api import EarthSatellite, load, wgs84
 from streamlit_folium import st_folium
-import requests
 
-from src.orbits.pass_predictor_optimized import fetch_tle_cached, compute_passes_optimized
+from src.orbits.pass_predictor_optimized import compute_passes_optimized, fetch_tle_cached
 
 # Enhanced page config
 st.set_page_config(
@@ -490,8 +485,8 @@ elif menu_options[selected_menu] == "tracker":
                             y=[0, p.max_elevation_deg, 0],
                             mode='lines+markers',
                             name=f'Pass {i+1}',
-                            line=dict(width=2),
-                            marker=dict(size=6)
+                            line={"width": 2},
+                            marker={"size": 6}
                         ))
 
                     fig.update_layout(
@@ -706,7 +701,7 @@ elif menu_options[selected_menu] == "visualizer":
                     y=alts,
                     mode='lines',
                     name='Altitude',
-                    line=dict(color='#4ECDC4', width=2),
+                    line={"color": '#4ECDC4', "width": 2},
                     fill='tozeroy',
                     fillcolor='rgba(78, 205, 196, 0.3)'
                 ))
@@ -729,19 +724,19 @@ elif menu_options[selected_menu] == "visualizer":
                     y=lats,
                     z=alts,
                     mode='lines',
-                    line=dict(color='#FF6B6B', width=4),
+                    line={"color": '#FF6B6B', "width": 4},
                     name='Orbital Path'
                 )])
 
                 fig_3d.update_layout(
                     title="3D Orbital Trajectory",
-                    scene=dict(
-                        xaxis_title='Longitude (°)',
-                        yaxis_title='Latitude (°)',
-                        zaxis_title='Altitude (km)',
-                        aspectmode='manual',
-                        aspectratio=dict(x=1, y=1, z=0.5)
-                    ),
+                    scene={
+                        "xaxis_title": 'Longitude (°)',
+                        "yaxis_title": 'Latitude (°)',
+                        "zaxis_title": 'Altitude (km)',
+                        "aspectmode": 'manual',
+                        "aspectratio": {"x": 1, "y": 1, "z": 0.5}
+                    },
                     height=500
                 )
                 st.plotly_chart(fig_3d, use_container_width=True)

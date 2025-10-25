@@ -3,10 +3,10 @@ from dataclasses import dataclass
 from typing import List, Tuple
 
 import requests
+import typer
 from rich.console import Console
 from rich.table import Table
 from skyfield.api import EarthSatellite, load, wgs84
-import typer
 
 console = Console()
 app = typer.Typer(help="Predict satellite passes using live TLEs.")

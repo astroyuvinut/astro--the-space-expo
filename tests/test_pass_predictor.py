@@ -6,14 +6,15 @@ Unit tests for satellite pass predictor functionality.
 import datetime as dt
 import unittest
 from unittest.mock import Mock, patch
-import pytest
+import requests
 
 from skyfield.api import EarthSatellite, load
+
 from src.orbits.pass_predictor_optimized import (
     PassEvent,
-    validate_coordinates,
-    fetch_tle_cached,
     compute_passes_optimized,
+    fetch_tle_cached,
+    validate_coordinates,
 )
 
 
@@ -116,7 +117,7 @@ class TestTLEFetching(unittest.TestCase):
     @patch('requests.get')
     def test_fetch_tle_network_error(self, mock_get):
         """Test TLE fetching with network error."""
-        mock_get.side_effect = Exception("Network error")
+        mock_get.side_effect = requests.RequestException("Network error")
 
         with self.assertRaises(ValueError):
             fetch_tle_cached(25544)
