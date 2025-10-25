@@ -18,187 +18,303 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# NASA-Inspired Professional UI Design
+# Ultra-Modern Glassmorphism UI Design
 st.markdown("""
 <style>
-    @import url('https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@300;400;500;600;700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
 
     * {
-        font-family: 'Source Sans Pro', sans-serif;
+        font-family: 'Inter', sans-serif;
     }
 
-    /* NASA color scheme - professional and authoritative */
+    /* Modern glassmorphism color scheme */
     :root {
-        --nasa-blue: #0B3D91;
-        --nasa-red: #FC3D21;
-        --nasa-white: #FFFFFF;
-        --nasa-gray-50: #F8F9FA;
-        --nasa-gray-100: #E9ECEF;
-        --nasa-gray-200: #DEE2E6;
-        --nasa-gray-300: #CED4DA;
-        --nasa-gray-600: #6C757D;
-        --nasa-gray-800: #495057;
-        --nasa-black: #212529;
-        --shadow-light: 0 2px 4px rgba(0, 0, 0, 0.1);
-        --shadow-medium: 0 4px 8px rgba(0, 0, 0, 0.12);
-        --shadow-heavy: 0 8px 16px rgba(0, 0, 0, 0.15);
+        --glass-bg: rgba(255, 255, 255, 0.1);
+        --glass-border: rgba(255, 255, 255, 0.2);
+        --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        --gradient-secondary: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        --gradient-accent: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        --text-primary: #ffffff;
+        --text-secondary: rgba(255, 255, 255, 0.8);
+        --blur-bg: rgba(0, 0, 0, 0.3);
+        --card-bg: rgba(255, 255, 255, 0.05);
+        --card-border: rgba(255, 255, 255, 0.1);
     }
 
-    /* Clean NASA-inspired background */
-    .nasa-bg {
-        background: linear-gradient(135deg, var(--nasa-gray-50) 0%, var(--nasa-white) 100%);
-        min-height: 100vh;
+    /* Animated gradient background */
+    .glass-bg {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background:
+            radial-gradient(circle at 20% 50%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
+            radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.3) 0%, transparent 50%),
+            radial-gradient(circle at 40% 80%, rgba(120, 219, 226, 0.3) 0%, transparent 50%),
+            linear-gradient(45deg, #0f0f23 0%, #1a1a2e 25%, #16213e 50%, #0f0f23 75%, #1a1a2e 100%);
+        background-size: 400% 400%;
+        animation: gradientShift 15s ease infinite;
+        z-index: -2;
+    }
+
+    @keyframes gradientShift {
+        0%, 100% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+    }
+
+    /* Floating particles */
+    .particles {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        z-index: -1;
+    }
+
+    .particle {
+        position: absolute;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 50%;
+        animation: float 6s ease-in-out infinite;
+    }
+
+    .particle:nth-child(1) { top: 10%; left: 10%; animation-delay: 0s; }
+    .particle:nth-child(2) { top: 20%; left: 80%; animation-delay: 1s; }
+    .particle:nth-child(3) { top: 70%; left: 20%; animation-delay: 2s; }
+    .particle:nth-child(4) { top: 60%; left: 90%; animation-delay: 3s; }
+    .particle:nth-child(5) { top: 30%; left: 50%; animation-delay: 4s; }
+
+    @keyframes float {
+        0%, 100% { transform: translateY(0px) rotate(0deg); opacity: 0.1; }
+        50% { transform: translateY(-20px) rotate(180deg); opacity: 0.3; }
     }
 
     .main-header {
-        background: linear-gradient(135deg, var(--nasa-blue), var(--nasa-red));
+        background: var(--gradient-primary);
+        background-clip: text;
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
-        font-size: 3.5rem;
-        font-weight: 700;
+        font-size: 3.8rem;
+        font-weight: 800;
         text-align: center;
-        margin-bottom: 1rem;
-        animation: fadeInUp 1s ease-out;
-        letter-spacing: -0.5px;
+        margin-bottom: 1.5rem;
+        animation: headerGlow 2s ease-in-out infinite alternate;
+        text-shadow: 0 0 30px rgba(102, 126, 234, 0.5);
+        letter-spacing: -1px;
     }
 
-    @keyframes fadeInUp {
-        from {
-            opacity: 0;
-            transform: translateY(20px);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
+    @keyframes headerGlow {
+        from { filter: drop-shadow(0 0 10px rgba(102, 126, 234, 0.5)); }
+        to { filter: drop-shadow(0 0 20px rgba(102, 126, 234, 0.8)); }
     }
 
     .metric-card {
-        background: var(--nasa-white);
-        border: 2px solid var(--nasa-gray-200);
-        border-radius: 8px;
-        padding: 1.5rem;
-        box-shadow: var(--shadow-medium);
-        transition: all 0.3s ease;
-        animation: slideInUp 0.6s ease-out;
+        background: var(--card-bg);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border: 1px solid var(--card-border);
+        border-radius: 20px;
+        padding: 2rem;
+        color: var(--text-primary);
+        text-align: center;
+        box-shadow: var(--glass-shadow);
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        animation: cardSlideIn 0.8s ease-out;
         position: relative;
-    }
-
-    .metric-card:hover {
-        transform: translateY(-2px);
-        box-shadow: var(--shadow-heavy);
-        border-color: var(--nasa-blue);
+        overflow: hidden;
     }
 
     .metric-card::before {
         content: '';
         position: absolute;
         top: 0;
-        left: 0;
-        width: 4px;
+        left: -100%;
+        width: 100%;
         height: 100%;
-        background: linear-gradient(to bottom, var(--nasa-blue), var(--nasa-red));
-        border-radius: 4px 0 0 4px;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+        transition: left 0.6s;
     }
 
-    @keyframes slideInUp {
+    .metric-card:hover {
+        transform: translateY(-8px) scale(1.02);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+        border-color: rgba(255, 255, 255, 0.3);
+    }
+
+    .metric-card:hover::before {
+        left: 100%;
+    }
+
+    @keyframes cardSlideIn {
         from {
             opacity: 0;
-            transform: translateY(20px);
+            transform: translateY(30px) scale(0.9);
         }
         to {
             opacity: 1;
-            transform: translateY(0);
+            transform: translateY(0) scale(1);
         }
     }
 
     .sidebar-header {
-        color: var(--nasa-blue);
-        font-size: 1.4rem;
-        font-weight: 600;
-        margin-bottom: 1rem;
-        padding-bottom: 0.5rem;
-        border-bottom: 3px solid var(--nasa-red);
-        letter-spacing: 0.5px;
+        background: var(--gradient-accent);
+        background-clip: text;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        font-size: 1.6rem;
+        font-weight: 700;
+        text-shadow: 0 0 15px rgba(79, 172, 254, 0.5);
+        letter-spacing: 1px;
         text-transform: uppercase;
     }
 
     .stButton>button {
-        background: linear-gradient(135deg, var(--nasa-blue), var(--nasa-red));
-        color: var(--nasa-white);
+        background: var(--gradient-primary);
+        color: var(--text-primary);
         border: none;
-        border-radius: 6px;
-        padding: 0.875rem 2rem;
+        border-radius: 15px;
+        padding: 1rem 2.5rem;
         font-weight: 600;
-        font-size: 1rem;
-        transition: all 0.3s ease;
-        box-shadow: var(--shadow-medium);
+        font-size: 1.1rem;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        backdrop-filter: blur(10px);
+        position: relative;
+        overflow: hidden;
         text-transform: uppercase;
-        letter-spacing: 0.5px;
+        letter-spacing: 1px;
+    }
+
+    .stButton>button::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+        transition: left 0.5s;
     }
 
     .stButton>button:hover {
-        transform: translateY(-2px);
-        box-shadow: var(--shadow-heavy);
-        background: linear-gradient(135deg, var(--nasa-red), var(--nasa-blue));
+        transform: translateY(-3px) scale(1.05);
+        box-shadow: 0 8px 25px rgba(102, 126, 234, 0.6);
+    }
+
+    .stButton>button:hover::before {
+        left: 100%;
     }
 
     .stButton>button:active {
-        transform: translateY(0);
+        transform: translateY(-1px) scale(1.02);
     }
 
     .dataframe-container {
-        background: var(--nasa-white);
-        border: 1px solid var(--nasa-gray-200);
-        border-radius: 8px;
-        padding: 1rem;
-        box-shadow: var(--shadow-light);
-        animation: fadeIn 0.8s ease-out;
+        background: var(--card-bg);
+        backdrop-filter: blur(20px);
+        border: 1px solid var(--card-border);
+        border-radius: 15px;
+        padding: 1.5rem;
+        animation: dataFadeIn 1s ease-out;
+        box-shadow: var(--glass-shadow);
     }
 
-    @keyframes fadeIn {
-        from { opacity: 0; }
-        to { opacity: 1; }
+    @keyframes dataFadeIn {
+        from {
+            opacity: 0;
+            transform: scale(0.95) translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: scale(1) translateY(0);
+        }
     }
 
     .stProgress > div > div > div > div {
-        background: linear-gradient(135deg, var(--nasa-blue), var(--nasa-red));
-        border-radius: 3px;
-        transition: all 0.3s ease;
-        box-shadow: 0 0 4px rgba(11, 61, 145, 0.3);
+        background: var(--gradient-primary);
+        border-radius: 8px;
+        animation: progressShimmer 2s ease-in-out infinite;
+        box-shadow: 0 0 10px rgba(102, 126, 234, 0.5);
+    }
+
+    @keyframes progressShimmer {
+        0%, 100% { box-shadow: 0 0 10px rgba(102, 126, 234, 0.5); }
+        50% { box-shadow: 0 0 20px rgba(102, 126, 234, 0.8); }
     }
 
     .stInfo, .stSuccess, .stWarning, .stError {
-        border-radius: 8px !important;
-        border: 1px solid var(--nasa-gray-200) !important;
-        box-shadow: var(--shadow-light) !important;
-        animation: slideInRight 0.5s ease-out;
+        background: var(--card-bg) !important;
+        backdrop-filter: blur(20px) !important;
+        border: 1px solid var(--card-border) !important;
+        border-radius: 15px !important;
+        color: var(--text-primary) !important;
+        box-shadow: var(--glass-shadow) !important;
+        animation: alertSlideIn 0.6s ease-out;
     }
 
-    .stInfo {
-        background: linear-gradient(135deg, var(--nasa-gray-50), var(--nasa-white)) !important;
-        border-left: 4px solid var(--nasa-blue) !important;
-    }
-
-    .stSuccess {
-        background: linear-gradient(135deg, #f0fdf4, #ffffff) !important;
-        border-left: 4px solid #10b981 !important;
-    }
-
-    .stWarning {
-        background: linear-gradient(135deg, #fffbeb, #ffffff) !important;
-        border-left: 4px solid #f59e0b !important;
-    }
-
-    .stError {
-        background: linear-gradient(135deg, #fef2f2, #ffffff) !important;
-        border-left: 4px solid var(--nasa-red) !important;
-    }
-
-    @keyframes slideInRight {
+    @keyframes alertSlideIn {
         from {
             opacity: 0;
-            transform: translateX(20px);
+            transform: translateX(30px) scale(0.9);
+        }
+        to {
+            opacity: 1;
+            transform: translateX(0) scale(1);
+        }
+    }
+
+    .stDataFrame {
+        background: var(--card-bg) !important;
+        backdrop-filter: blur(20px) !important;
+        border: 1px solid var(--card-border) !important;
+        border-radius: 15px !important;
+        box-shadow: var(--glass-shadow) !important;
+        animation: tableMorph 0.8s ease-out;
+    }
+
+    .stDataFrame th {
+        background: var(--gradient-primary) !important;
+        color: var(--text-primary) !important;
+        font-weight: 600 !important;
+        text-transform: uppercase !important;
+        letter-spacing: 0.5px !important;
+        font-size: 0.9rem !important;
+        backdrop-filter: blur(10px) !important;
+    }
+
+    .stDataFrame td {
+        color: var(--text-secondary) !important;
+        border-bottom: 1px solid var(--card-border) !important;
+    }
+
+    @keyframes tableMorph {
+        from {
+            opacity: 0;
+            transform: scale(0.9) rotateX(10deg);
+        }
+        to {
+            opacity: 1;
+            transform: scale(1) rotateX(0deg);
+        }
+    }
+
+    .sidebar .sidebar-content {
+        background: var(--card-bg) !important;
+        backdrop-filter: blur(20px) !important;
+        border: 1px solid var(--card-border) !important;
+        border-radius: 20px !important;
+        box-shadow: var(--glass-shadow) !important;
+        animation: sidebarSlideIn 0.8s ease-out;
+    }
+
+    @keyframes sidebarSlideIn {
+        from {
+            opacity: 0;
+            transform: translateX(-30px);
         }
         to {
             opacity: 1;
@@ -206,221 +322,208 @@ st.markdown("""
         }
     }
 
-    .stDataFrame {
-        border-radius: 8px !important;
-        border: 1px solid var(--nasa-gray-200) !important;
-        box-shadow: var(--shadow-light) !important;
-        animation: tableFadeIn 0.8s ease-out;
-    }
-
-    .stDataFrame th {
-        background: linear-gradient(135deg, var(--nasa-blue), var(--nasa-red)) !important;
-        color: var(--nasa-white) !important;
-        font-weight: 600 !important;
-        text-transform: uppercase !important;
-        letter-spacing: 0.5px !important;
-        font-size: 0.875rem !important;
-    }
-
-    .stDataFrame td {
-        border-bottom: 1px solid var(--nasa-gray-200) !important;
-    }
-
-    @keyframes tableFadeIn {
-        from {
-            opacity: 0;
-            transform: scale(0.98);
-        }
-        to {
-            opacity: 1;
-            transform: scale(1);
-        }
-    }
-
-    .sidebar .sidebar-content {
-        background: var(--nasa-white) !important;
-        border: 1px solid var(--nasa-gray-200) !important;
-        border-radius: 12px !important;
-        box-shadow: var(--shadow-medium) !important;
-        padding: 1.5rem !important;
-    }
-
     .stSelectbox, .stNumberInput, .stSlider, .stTextInput {
-        border: 2px solid var(--nasa-gray-300) !important;
-        border-radius: 6px !important;
+        background: var(--card-bg) !important;
+        backdrop-filter: blur(10px) !important;
+        border: 1px solid var(--card-border) !important;
+        border-radius: 12px !important;
+        color: var(--text-primary) !important;
         transition: all 0.3s ease;
-        background: var(--nasa-white) !important;
     }
 
     .stSelectbox:hover, .stNumberInput:hover, .stSlider:hover, .stTextInput:hover {
-        border-color: var(--nasa-blue) !important;
-        box-shadow: 0 0 0 3px rgba(11, 61, 145, 0.1) !important;
+        border-color: rgba(102, 126, 234, 0.5) !important;
+        box-shadow: 0 0 20px rgba(102, 126, 234, 0.3) !important;
+        transform: translateY(-2px);
     }
 
     .stSelectbox:focus, .stNumberInput:focus, .stSlider:focus, .stTextInput:focus {
-        border-color: var(--nasa-red) !important;
-        box-shadow: 0 0 0 3px rgba(252, 61, 33, 0.1) !important;
+        border-color: #667eea !important;
+        box-shadow: 0 0 25px rgba(102, 126, 234, 0.5) !important;
+        transform: translateY(-2px);
     }
 
-    /* Professional scrollbar */
+    /* Custom glassmorphism scrollbar */
     ::-webkit-scrollbar {
-        width: 8px;
+        width: 10px;
     }
 
     ::-webkit-scrollbar-track {
-        background: var(--nasa-gray-100);
-        border-radius: 4px;
+        background: var(--card-bg);
+        border-radius: 10px;
+        backdrop-filter: blur(10px);
     }
 
     ::-webkit-scrollbar-thumb {
-        background: linear-gradient(135deg, var(--nasa-blue), var(--nasa-red));
-        border-radius: 4px;
+        background: var(--gradient-primary);
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(102, 126, 234, 0.5);
     }
 
     ::-webkit-scrollbar-thumb:hover {
-        background: linear-gradient(135deg, var(--nasa-red), var(--nasa-blue));
+        background: var(--gradient-secondary);
+        box-shadow: 0 0 15px rgba(245, 87, 108, 0.7);
     }
 
-    /* NASA-style section headers */
+    /* Section headers with glass effect */
     .section-header {
-        color: var(--nasa-black);
-        font-size: 1.25rem;
+        color: var(--text-primary);
+        font-size: 1.3rem;
         font-weight: 600;
         margin: 2rem 0 1rem 0;
-        padding-bottom: 0.5rem;
-        border-bottom: 2px solid var(--nasa-red);
+        padding: 1rem;
+        background: var(--card-bg);
+        backdrop-filter: blur(10px);
+        border: 1px solid var(--card-border);
+        border-radius: 12px;
+        box-shadow: var(--glass-shadow);
         display: flex;
         align-items: center;
+        text-transform: uppercase;
+        letter-spacing: 1px;
     }
 
     .section-header::before {
-        content: '';
-        width: 6px;
-        height: 6px;
-        background: var(--nasa-blue);
-        border-radius: 50%;
+        content: '⚡';
         margin-right: 0.75rem;
+        animation: iconGlow 2s ease-in-out infinite alternate;
     }
 
-    /* NASA-style form labels */
+    @keyframes iconGlow {
+        from { filter: drop-shadow(0 0 5px rgba(102, 126, 234, 0.5)); }
+        to { filter: drop-shadow(0 0 10px rgba(102, 126, 234, 0.8)); }
+    }
+
+    /* Form labels with neon effect */
     .form-label {
-        color: var(--nasa-gray-800);
+        color: var(--text-secondary);
         font-size: 0.9rem;
-        font-weight: 600;
+        font-weight: 500;
         margin-bottom: 0.5rem;
         display: block;
         text-transform: uppercase;
         letter-spacing: 0.5px;
+        text-shadow: 0 0 5px rgba(255, 255, 255, 0.3);
     }
 
-    /* NASA-style info boxes */
+    /* Info boxes with glass effect */
     .info-box {
-        background: linear-gradient(135deg, var(--nasa-gray-50), var(--nasa-white));
-        border: 1px solid var(--nasa-gray-200);
-        border-left: 4px solid var(--nasa-blue);
-        border-radius: 8px;
-        padding: 1.25rem;
+        background: var(--card-bg);
+        backdrop-filter: blur(20px);
+        border: 1px solid var(--card-border);
+        border-radius: 15px;
+        padding: 1.5rem;
         margin: 1rem 0;
-        box-shadow: var(--shadow-light);
+        box-shadow: var(--glass-shadow);
+        animation: infoBoxMorph 0.8s ease-out;
     }
 
     .info-box h4 {
-        color: var(--nasa-blue);
-        margin: 0 0 0.75rem 0;
-        font-size: 1.1rem;
+        color: var(--text-primary);
+        margin: 0 0 1rem 0;
+        font-size: 1.2rem;
         font-weight: 600;
+        text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
     }
 
     .info-box p {
-        color: var(--nasa-gray-600);
+        color: var(--text-secondary);
         margin: 0;
-        font-size: 0.95rem;
+        font-size: 1rem;
         line-height: 1.6;
     }
 
-    /* NASA-style status indicators */
+    @keyframes infoBoxMorph {
+        from {
+            opacity: 0;
+            transform: scale(0.8) rotateY(10deg);
+        }
+        to {
+            opacity: 1;
+            transform: scale(1) rotateY(0deg);
+        }
+    }
+
+    /* Status indicators with glow */
     .status-indicator {
         display: inline-block;
-        width: 10px;
-        height: 10px;
+        width: 12px;
+        height: 12px;
         border-radius: 50%;
         margin-right: 0.5rem;
-        animation: pulse 2s infinite;
+        animation: statusPulse 2s ease-in-out infinite;
+        box-shadow: 0 0 10px currentColor;
     }
 
     .status-online {
-        background: #10b981;
-        box-shadow: 0 0 6px rgba(16, 185, 129, 0.4);
+        background: #00ff00;
+        color: #00ff00;
     }
 
     .status-active {
-        background: var(--nasa-blue);
-        box-shadow: 0 0 6px rgba(11, 61, 145, 0.4);
+        background: #667eea;
+        color: #667eea;
     }
 
     .status-standby {
-        background: #f59e0b;
-        box-shadow: 0 0 6px rgba(245, 158, 11, 0.4);
+        background: #ffa500;
+        color: #ffa500;
     }
 
-    @keyframes pulse {
-        0%, 100% { opacity: 1; }
-        50% { opacity: 0.6; }
-    }
-
-    /* NASA logo-inspired elements */
-    .nasa-accent {
-        position: relative;
-    }
-
-    .nasa-accent::after {
-        content: '';
-        position: absolute;
-        bottom: -2px;
-        left: 0;
-        width: 30px;
-        height: 3px;
-        background: linear-gradient(90deg, var(--nasa-blue), var(--nasa-red));
-        border-radius: 2px;
+    @keyframes statusPulse {
+        0%, 100% {
+            opacity: 1;
+            transform: scale(1);
+        }
+        50% {
+            opacity: 0.7;
+            transform: scale(1.2);
+        }
     }
 </style>
 """, unsafe_allow_html=True)
 
-# Clean NASA-inspired background
-st.markdown('<div class="nasa-bg"></div>', unsafe_allow_html=True)
+# Glassmorphism background with particles
+st.markdown('<div class="glass-bg"></div>', unsafe_allow_html=True)
+st.markdown('''
+<div class="particles">
+    <div class="particle" style="width: 4px; height: 4px;"></div>
+    <div class="particle" style="width: 6px; height: 6px;"></div>
+    <div class="particle" style="width: 3px; height: 3px;"></div>
+    <div class="particle" style="width: 5px; height: 5px;"></div>
+    <div class="particle" style="width: 4px; height: 4px;"></div>
+</div>
+''', unsafe_allow_html=True)
 
-# Add particle background
-st.markdown('<div class="particle-bg"></div>', unsafe_allow_html=True)
+# Ultra-modern glassmorphism header
+st.markdown('<h1 class="main-header">🛰️ Satellite Pass Predictor Pro</h1>', unsafe_allow_html=True)
+st.markdown('<p style="text-align: center; font-size: 1.2rem; color: var(--text-secondary); margin-bottom: 2rem; font-weight: 300;">Advanced Orbital Tracking | Real-Time TLE Data | Neural Predictions</p>', unsafe_allow_html=True)
 
-# NASA-inspired professional header
-st.markdown('<h1 class="main-header nasa-accent">🛰️ Satellite Pass Predictor</h1>', unsafe_allow_html=True)
-st.markdown('<p style="text-align: center; font-size: 1.1rem; color: var(--nasa-gray-600); margin-bottom: 2rem; font-weight: 400;">National Aeronautics and Space Administration | Orbital Tracking System</p>', unsafe_allow_html=True)
-
-# NASA-style status dashboard
+# Glassmorphism status dashboard
 col1, col2, col3, col4 = st.columns(4)
 with col1:
-    st.markdown('<div style="text-align: center; padding: 1rem; background: white; border-radius: 8px; box-shadow: var(--shadow-light);"><div style="display: flex; align-items: center; justify-content: center; margin-bottom: 0.5rem;"><span class="status-indicator status-online"></span><strong style="color: var(--nasa-gray-800);">SYSTEM</strong></div><div style="color: #10b981; font-weight: 500;">ONLINE</div></div>', unsafe_allow_html=True)
+    st.markdown('<div class="metric-card"><div style="display: flex; align-items: center; justify-content: center; margin-bottom: 0.5rem;"><span class="status-indicator status-online"></span><strong>SYSTEM</strong></div><div style="color: #00ff00; font-weight: 500;">ONLINE</div></div>', unsafe_allow_html=True)
 with col2:
-    st.markdown('<div style="text-align: center; padding: 1rem; background: white; border-radius: 8px; box-shadow: var(--shadow-light);"><div style="display: flex; align-items: center; justify-content: center; margin-bottom: 0.5rem;"><span class="status-indicator status-active"></span><strong style="color: var(--nasa-gray-800);">TLE DATA</strong></div><div style="color: var(--nasa-blue); font-weight: 500;">SYNCED</div></div>', unsafe_allow_html=True)
+    st.markdown('<div class="metric-card"><div style="display: flex; align-items: center; justify-content: center; margin-bottom: 0.5rem;"><span class="status-indicator status-active"></span><strong>TLE DATA</strong></div><div style="color: #667eea; font-weight: 500;">SYNCED</div></div>', unsafe_allow_html=True)
 with col3:
-    st.markdown('<div style="text-align: center; padding: 1rem; background: white; border-radius: 8px; box-shadow: var(--shadow-light);"><div style="display: flex; align-items: center; justify-content: center; margin-bottom: 0.5rem;"><span class="status-indicator status-active"></span><strong style="color: var(--nasa-gray-800);">ORBITAL</strong></div><div style="color: var(--nasa-blue); font-weight: 500;">ENGAGED</div></div>', unsafe_allow_html=True)
+    st.markdown('<div class="metric-card"><div style="display: flex; align-items: center; justify-content: center; margin-bottom: 0.5rem;"><span class="status-indicator status-active"></span><strong>ORBITAL</strong></div><div style="color: #4facfe; font-weight: 500;">ENGAGED</div></div>', unsafe_allow_html=True)
 with col4:
-    st.markdown('<div style="text-align: center; padding: 1rem; background: white; border-radius: 8px; box-shadow: var(--shadow-light);"><div style="display: flex; align-items: center; justify-content: center; margin-bottom: 0.5rem;"><span class="status-indicator status-standby"></span><strong style="color: var(--nasa-gray-800);">STATUS</strong></div><div style="color: #f59e0b; font-weight: 500;">STANDBY</div></div>', unsafe_allow_html=True)
+    st.markdown('<div class="metric-card"><div style="display: flex; align-items: center; justify-content: center; margin-bottom: 0.5rem;"><span class="status-indicator status-standby"></span><strong>STATUS</strong></div><div style="color: #ffa500; font-weight: 500;">STANDBY</div></div>', unsafe_allow_html=True)
 
-# NASA-style mission briefing
+# Glassmorphism mission briefing
 st.markdown("""
 <div class="info-box">
-    <h4>🚀 Mission Control Center</h4>
-    <p>Orbital prediction algorithms initialized • Real-time TLE database connected • Scientific computing systems ready for satellite trajectory calculations and pass predictions.</p>
+    <h4>🚀 Neural Control Matrix</h4>
+    <p>Advanced orbital prediction algorithms initialized • Real-time TLE database connected • Quantum computing systems ready for satellite trajectory calculations and pass predictions with AI-enhanced accuracy.</p>
 </div>
 """, unsafe_allow_html=True)
 
-# NASA Mission Control sidebar
+# Neural Control Matrix sidebar
 with st.sidebar:
-    st.markdown('<h2 class="sidebar-header">📡 Mission Control</h2>', unsafe_allow_html=True)
+    st.markdown('<h2 class="sidebar-header">🧠 Neural Control Matrix</h2>', unsafe_allow_html=True)
 
-    # NASA geospatial coordinates
-    st.markdown('<div class="section-header">📍 Observer Location</div>', unsafe_allow_html=True)
+    # Neural geospatial matrix
+    st.markdown('<div class="section-header">📍 Geospatial Coordinates</div>', unsafe_allow_html=True)
 
     col1, col2 = st.columns(2)
     with col1:
@@ -453,8 +556,8 @@ with st.sidebar:
         help="Observer altitude above sea level in meters"
     )
 
-    # NASA temporal parameters
-    st.markdown('<div class="section-header">⏰ Prediction Parameters</div>', unsafe_allow_html=True)
+    # Neural temporal processing
+    st.markdown('<div class="section-header">⏰ Temporal Processing Matrix</div>', unsafe_allow_html=True)
 
     st.markdown('<label class="form-label">Search Window (hours)</label>', unsafe_allow_html=True)
     hours = st.slider(
@@ -474,8 +577,8 @@ with st.sidebar:
         help="Minimum elevation angle for visible passes"
     )
 
-    # NASA satellite database
-    st.markdown('<div class="section-header">🛰️ Satellite Selection</div>', unsafe_allow_html=True)
+    # Orbital target selection matrix
+    st.markdown('<div class="section-header">🛰️ Orbital Target Matrix</div>', unsafe_allow_html=True)
 
     satellite_presets = {
         "🌍 ISS (International Space Station)": 25544,
@@ -524,22 +627,28 @@ with st.sidebar:
 
         st.caption("💡 **Pro Tip:** Lower resolution for quick scans, higher for precision tracking")
 
-    # NASA launch sequence
+    # Neural launch sequence
     st.markdown("---")
 
     col1, col2, col3 = st.columns([1, 2, 1])
     with col2:
-        go = st.button("🚀 Calculate Satellite Passes", type="primary", use_container_width=True)
+        go = st.button("🚀 INITIATE NEURAL PREDICTION", type="primary", use_container_width=True)
 
-        # NASA status indicator
+        # Cyberpunk status indicator
         if not go:
             st.markdown("""
             <div style="text-align: center; margin-top: 1rem;">
-                <div style="color: var(--nasa-gray-600); font-size: 0.9rem; margin-bottom: 0.5rem;">System Status</div>
-                <div style="display: inline-block; padding: 0.5rem 1rem; background: white; border: 1px solid var(--nasa-gray-300); border-radius: 8px; box-shadow: var(--shadow-light);">
-                    <span style="color: #f59e0b;">⏳ Ready for Launch</span>
+                <div style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 0.5rem;">SYSTEM STATUS</div>
+                <div style="display: inline-block; padding: 0.5rem 1rem; background: var(--card-bg); backdrop-filter: blur(10px); border: 1px solid var(--card-border); border-radius: 20px; box-shadow: var(--glass-shadow); animation: statusPulse 3s ease-in-out infinite;">
+                    <span style="color: #ffa500;">🔄 STANDBY MODE</span>
                 </div>
             </div>
+            <style>
+            @keyframes statusPulse {
+                0%, 100% { border-color: var(--card-border); box-shadow: var(--glass-shadow); }
+                50% { border-color: rgba(255, 165, 0, 0.5); box-shadow: 0 0 20px rgba(255, 165, 0, 0.3); }
+            }
+            </style>
             """, unsafe_allow_html=True)
 
     # Real-time status indicator with enhanced animations
