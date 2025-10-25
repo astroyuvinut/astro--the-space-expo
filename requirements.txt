@@ -13,3 +13,5 @@ plotly>=5.17
 folium>=0.16
 # Performance optimization dependencies
 scipy>=1.11
+# Additional dependencies for enhanced UI
+plotly>=5.17
