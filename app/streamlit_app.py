@@ -16,6 +16,11 @@ from streamlit_folium import st_folium
 
 from src.orbits.pass_predictor_optimized import compute_passes_optimized, fetch_tle_cached
 
+
+@st.cache_data(ttl=3600, show_spinner=False)
+def get_tle(norad_id: int):
+    return fetch_tle_cached(norad_id)
+
 # Enhanced page config
 st.set_page_config(
     page_title="Space Exploration AI",
@@ -312,7 +317,7 @@ elif menu_options[selected_menu] == "tracker":
         satellite_options = {
             "International Space Station (ISS)": 25544,
             "Hubble Space Telescope": 20580,
-            "Starlink-1007": 44713,
+            "Starlink-4303": 53544,
             "NOAA-18": 28654,
             "Terra (EOS AM-1)": 25994,
             "Custom NORAD ID": None
@@ -387,7 +392,7 @@ elif menu_options[selected_menu] == "tracker":
 
                 status_text.text("📡 Fetching satellite TLE data...")
                 progress_bar.progress(20)
-                name, l1, l2 = fetch_tle_cached(int(norad))
+                name, l1, l2 = get_tle(int(norad))
 
                 status_text.text("🛰️ Creating satellite model...")
                 progress_bar.progress(40)
@@ -532,7 +537,7 @@ elif menu_options[selected_menu] == "visualizer":
             viz_satellite_options = {
                 "International Space Station (ISS)": 25544,
                 "Hubble Space Telescope": 20580,
-                "Starlink-1007": 44713,
+                "Starlink-4303": 53544,
                 "NOAA-18": 28654,
                 "Terra (EOS AM-1)": 25994,
                 "Custom NORAD ID": None
@@ -602,7 +607,7 @@ elif menu_options[selected_menu] == "visualizer":
 
                 status_text.text("📡 Fetching satellite data...")
                 progress_bar.progress(20)
-                name, l1, l2 = fetch_tle_cached(int(viz_norad))
+                name, l1, l2 = get_tle(int(viz_norad))
 
                 status_text.text("🛰️ Computing orbital path...")
                 progress_bar.progress(50)
@@ -826,7 +831,7 @@ elif menu_options[selected_menu] == "database":
             st.session_state.satellite_db = [
                 {"norad": 25544, "name": "ISS (ZARYA)", "category": "Science", "active": True, "launch_date": "1998-11-20"},
                 {"norad": 20580, "name": "HST", "category": "Science", "active": True, "launch_date": "1990-04-24"},
-                {"norad": 44713, "name": "STARLINK-1007", "category": "Communications", "active": True, "launch_date": "2019-11-11"},
+                {"norad": 53544, "name": "STARLINK-4303", "category": "Communications", "active": True, "launch_date": "2022-09-24"},
                 {"norad": 28654, "name": "NOAA 18", "category": "Weather", "active": True, "launch_date": "2005-05-20"},
                 {"norad": 25994, "name": "TERRA", "category": "Earth Observation", "active": True, "launch_date": "1999-12-18"},
                 {"norad": 40069, "name": "METEOR-M2", "category": "Weather", "active": True, "launch_date": "2014-07-08"},

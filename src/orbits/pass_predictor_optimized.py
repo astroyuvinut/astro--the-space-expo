@@ -22,9 +22,27 @@ _REQUEST_HEADERS = {
 # (source_name, url_template, response_format)
 _TLE_SOURCES = [
     ("celestrak", "https://celestrak.org/NORAD/elements/gp.php?CATNR={norad}&FORMAT=TLE", "text"),
-    ("tle_api",   "https://tle.ivanstanojevic.me/api/tle/{norad}",                          "json"),
-    ("celestrak2","https://celestrak.org/satcat/tle.txt?CATNR={norad}",                    "text"),
+    ("celestrak2","https://celestrak.org/NORAD/elements/gp.php?CATNR={norad}&FORMAT=tle", "text"),
 ]
+
+# Hardcoded TLEs fetched 2026-05-27 — last resort if all network sources fail
+_FALLBACK_TLES: dict = {
+    25544: ("ISS (ZARYA)",
+            "1 25544U 98067A   26146.77668714  .00011632  00000+0  21582-3 0  9998",
+            "2 25544  51.6334  46.0936 0007421 101.1111 259.0712 15.49400906568432"),
+    20580: ("HST",
+            "1 20580U 90037B   26146.88771584  .00006641  00000+0  21113-3 0  9998",
+            "2 20580  28.4732 226.1196 0001302 268.2124  91.8322 15.30501614785305"),
+    53544: ("STARLINK-4303",
+            "1 53544U 22101T   26146.78551400  .00000368  00000+0  41240-4 0  9997",
+            "2 53544  53.2095  73.5328 0001400  89.2197 270.8955 15.08835996208769"),
+    28654: ("NOAA 18",
+            "1 28654U 05018A   26146.88965758  .00000047  00000+0  48222-4 0  9996",
+            "2 28654  98.8112 226.8751 0013787 207.5633 152.4810 14.13724881 83303"),
+    25994: ("TERRA",
+            "1 25994U 99068A   26146.86543731  .00000393  00000+0  88950-4 0  9995",
+            "2 25994  97.9469 197.2557 0001067 327.8921 141.0832 14.61083186406497"),
+}
 
 # Advanced TLE Cache with TTL and metadata
 _tle_cache = {}  # {norad_id: (tle_data, timestamp, metadata)}
@@ -44,6 +62,7 @@ def validate_coordinates(latitude: float, longitude: float, altitude: float) -> 
 
 def fetch_tle_cached(norad_id: int) -> Tuple[str, str, str]:
     """Fetch TLE data with caching and multiple fallback sources."""
+    import urllib.request as _urllib
     current_time = time.time()
 
     if len(_tle_cache) >= TLE_CACHE_MAX_SIZE:
@@ -58,6 +77,8 @@ def fetch_tle_cached(norad_id: int) -> Tuple[str, str, str]:
 
     tle_data = None
     source_used = None
+
+    # Layer 1: requests library
     for source_name, url_template, fmt in _TLE_SOURCES:
         try:
             url = url_template.format(norad=norad_id)
@@ -66,7 +87,7 @@ def fetch_tle_cached(norad_id: int) -> Tuple[str, str, str]:
             if fmt == "json":
                 tle_data = _parse_tle_json(resp.json(), norad_id)
             else:
-                lines = [line.strip() for line in resp.text.splitlines() if line.strip()]
+                lines = [l.strip() for l in resp.text.splitlines() if l.strip()]
                 if len(lines) >= 2:
                     tle_data = _parse_tle_data(lines, norad_id)
             if tle_data:
@@ -74,6 +95,25 @@ def fetch_tle_cached(norad_id: int) -> Tuple[str, str, str]:
                 break
         except Exception:
             continue
+
+    # Layer 2: urllib (different HTTP stack, sometimes works when requests is blocked)
+    if not tle_data:
+        try:
+            url = f"https://celestrak.org/NORAD/elements/gp.php?CATNR={norad_id}&FORMAT=TLE"
+            req = _urllib.Request(url, headers=_REQUEST_HEADERS)
+            with _urllib.urlopen(req, timeout=20) as resp:
+                text = resp.read().decode("utf-8")
+            lines = [l.strip() for l in text.splitlines() if l.strip()]
+            if len(lines) >= 2:
+                tle_data = _parse_tle_data(lines, norad_id)
+                source_used = "urllib_celestrak"
+        except Exception:
+            pass
+
+    # Layer 3: hardcoded fallback TLEs (stale but functional for demo)
+    if not tle_data and norad_id in _FALLBACK_TLES:
+        tle_data = _FALLBACK_TLES[norad_id]
+        source_used = "fallback"
 
     if tle_data is None:
         raise ValueError(f"Failed to fetch TLE data for NORAD {norad_id} from all sources")
