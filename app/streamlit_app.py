@@ -16,10 +16,34 @@ from streamlit_folium import st_folium
 
 from src.orbits.pass_predictor_optimized import compute_passes_optimized, fetch_tle_cached
 
+# Emergency TLEs fetched 2026-05-27 — used only if ALL network sources fail
+_EMERGENCY_TLES = {
+    25544: ("ISS (ZARYA)",
+            "1 25544U 98067A   26146.77668714  .00011632  00000+0  21582-3 0  9998",
+            "2 25544  51.6334  46.0936 0007421 101.1111 259.0712 15.49400906568432"),
+    20580: ("HST",
+            "1 20580U 90037B   26146.88771584  .00006641  00000+0  21113-3 0  9998",
+            "2 20580  28.4732 226.1196 0001302 268.2124  91.8322 15.30501614785305"),
+    53544: ("STARLINK-4303",
+            "1 53544U 22101T   26146.78551400  .00000368  00000+0  41240-4 0  9997",
+            "2 53544  53.2095  73.5328 0001400  89.2197 270.8955 15.08835996208769"),
+    28654: ("NOAA 18",
+            "1 28654U 05018A   26146.88965758  .00000047  00000+0  48222-4 0  9996",
+            "2 28654  98.8112 226.8751 0013787 207.5633 152.4810 14.13724881 83303"),
+    25994: ("TERRA",
+            "1 25994U 99068A   26146.86543731  .00000393  00000+0  88950-4 0  9995",
+            "2 25994  97.9469 197.2557 0001067 327.8921 141.0832 14.61083186406497"),
+}
+
 
 @st.cache_data(ttl=3600, show_spinner=False)
 def get_tle(norad_id: int):
-    return fetch_tle_cached(norad_id)
+    try:
+        return fetch_tle_cached(norad_id)
+    except Exception:
+        if norad_id in _EMERGENCY_TLES:
+            return _EMERGENCY_TLES[norad_id]
+        raise
 
 # Enhanced page config
 st.set_page_config(
