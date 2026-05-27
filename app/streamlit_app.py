@@ -462,7 +462,7 @@ elif menu_options[selected_menu] == "tracker":
                     for i, p in enumerate(passes, 1):
                         duration = p.end - p.start
                         duration_min = duration.total_seconds() / 60
-                        now = dt.datetime.now(dt.timezone.utc).replace(tzinfo=None)
+                        now = dt.datetime.now(dt.timezone.utc)
                         time_until = p.start - now
                         hours_until = time_until.total_seconds() / 3600
 
