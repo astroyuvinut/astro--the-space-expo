@@ -15,11 +15,16 @@ from skyfield.toposlib import Topos
 console = Console()
 app = typer.Typer(help="Predict satellite passes using live TLEs (Optimized).")
 
-TLE_SOURCES = {
-    "celestrak": "https://celestrak.org/NORAD/elements/gp.php?CATNR={norad}&FORMAT=tle",
-    "celestrak_backup": "https://celestrak.org/NORAD/elements/gp.php?CATNR={norad}&FORMAT=tle",
-    "n2yo": "https://api.n2yo.com/rest/v1/satellite/tle/{norad}&apiKey=demo",  # Demo key - replace with real
+_REQUEST_HEADERS = {
+    "User-Agent": "SpaceExpo-SatelliteTracker/2.0 (github.com/astroyuvinut/astro--the-space-expo)"
 }
+
+# (source_name, url_template, response_format)
+_TLE_SOURCES = [
+    ("celestrak", "https://celestrak.org/NORAD/elements/gp.php?CATNR={norad}&FORMAT=TLE", "text"),
+    ("tle_api",   "https://tle.ivanstanojevic.me/api/tle/{norad}",                          "json"),
+    ("celestrak2","https://celestrak.org/satcat/tle.txt?CATNR={norad}",                    "text"),
+]
 
 # Advanced TLE Cache with TTL and metadata
 _tle_cache = {}  # {norad_id: (tle_data, timestamp, metadata)}
@@ -38,55 +43,42 @@ def validate_coordinates(latitude: float, longitude: float, altitude: float) -> 
 
 
 def fetch_tle_cached(norad_id: int) -> Tuple[str, str, str]:
-    """Advanced TLE fetching with intelligent caching and fallback sources."""
+    """Fetch TLE data with caching and multiple fallback sources."""
     current_time = time.time()
-    cache_key = norad_id
 
-    # Check cache with LRU-style eviction if needed
     if len(_tle_cache) >= TLE_CACHE_MAX_SIZE:
-        # Remove oldest entries (simple FIFO eviction)
-        oldest_keys = sorted(_tle_cache.keys(),
-                           key=lambda k: _tle_cache[k][1])[:10]  # Remove 10 oldest
+        oldest_keys = sorted(_tle_cache, key=lambda k: _tle_cache[k][1])[:10]
         for key in oldest_keys:
             del _tle_cache[key]
 
-    # Check if we have a valid cached entry
-    if cache_key in _tle_cache:
-        cached_data, timestamp, metadata = _tle_cache[cache_key]
+    if norad_id in _tle_cache:
+        cached_data, timestamp, _ = _tle_cache[norad_id]
         if current_time - timestamp < TLE_CACHE_TTL:
             return cached_data
 
-    # Fetch new TLE data with fallback sources
     tle_data = None
     source_used = None
-
-    for source_name, url_template in TLE_SOURCES.items():
+    for source_name, url_template, fmt in _TLE_SOURCES:
         try:
             url = url_template.format(norad=norad_id)
-            resp = requests.get(url, timeout=10)  # Reduced timeout
+            resp = requests.get(url, timeout=20, headers=_REQUEST_HEADERS)
             resp.raise_for_status()
-
-            lines = [line.strip() for line in resp.text.splitlines() if line.strip()]
-            if len(lines) >= 2:
-                tle_data = _parse_tle_data(lines, norad_id)
+            if fmt == "json":
+                tle_data = _parse_tle_json(resp.json(), norad_id)
+            else:
+                lines = [line.strip() for line in resp.text.splitlines() if line.strip()]
+                if len(lines) >= 2:
+                    tle_data = _parse_tle_data(lines, norad_id)
+            if tle_data:
                 source_used = source_name
                 break
-
-        except (requests.RequestException, ValueError) as e:
-            console.print(f"[yellow]Warning: Failed to fetch from {source_name}: {e}[/yellow]")
+        except Exception:
             continue
 
     if tle_data is None:
         raise ValueError(f"Failed to fetch TLE data for NORAD {norad_id} from all sources")
 
-    # Enhanced caching with metadata
-    metadata = {
-        'source': source_used,
-        'fetch_time': current_time,
-        'satellite_name': tle_data[0]
-    }
-    _tle_cache[cache_key] = (tle_data, current_time, metadata)
-
+    _tle_cache[norad_id] = (tle_data, current_time, {"source": source_used})
     return tle_data
 
 
@@ -115,6 +107,16 @@ def _parse_tle_data(lines: List[str], norad_id: int) -> Tuple[str, str, str]:
     except (ValueError, IndexError):
         console.print(f"[yellow]Warning: Could not verify NORAD ID in TLE[/yellow]")
 
+    return name, line1, line2
+
+
+def _parse_tle_json(data: dict, norad_id: int) -> Tuple[str, str, str]:
+    """Parse TLE from tle.ivanstanojevic.me JSON response."""
+    name = data.get("name", f"NORAD {norad_id}")
+    line1 = data.get("line1", "")
+    line2 = data.get("line2", "")
+    if not (line1.startswith("1 ") and line2.startswith("2 ")):
+        raise ValueError("Invalid TLE in JSON response")
     return name, line1, line2
 
 
@@ -202,9 +204,8 @@ def _estimate_orbital_period(sat: EarthSatellite) -> float:
         mean_motion_rev_day = float(line2[52:63])  # Mean motion field
         period_minutes = 1440.0 / mean_motion_rev_day  # Convert to minutes
         return period_minutes
-    except:
-        # Fallback to typical LEO period
-        return 90.0  # ~90 minutes for typical LEO
+    except (ValueError, IndexError, AttributeError):
+        return 90.0
 
 
 def _find_ultra_coarse_passes(

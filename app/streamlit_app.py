@@ -4,6 +4,7 @@ import sys
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 import datetime as dt
+import json
 import time
 
 import folium
@@ -92,7 +93,7 @@ st.markdown("""
     .status-inactive { background-color: #ff4444; }
 
     .satellite-card {
-        background: #f8f9fa;
+        background: rgba(255,255,255,0.05);
         border-radius: 15px;
         padding: 1.5rem;
         margin: 1rem 0;
@@ -101,7 +102,7 @@ st.markdown("""
     }
 
     .satellite-card:hover {
-        box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        box-shadow: 0 8px 25px rgba(102,126,234,0.3);
         transform: translateY(-2px);
     }
 
@@ -121,11 +122,11 @@ st.markdown("""
     }
 
     .control-panel {
-        background: #f8f9fa;
+        background: rgba(255,255,255,0.04);
         border-radius: 15px;
         padding: 2rem;
         margin-bottom: 2rem;
-        border: 1px solid #e9ecef;
+        border: 1px solid rgba(255,255,255,0.1);
     }
 
     .tab-content {
@@ -1188,7 +1189,6 @@ elif menu_options[selected_menu] == "settings":
                     "appearance": st.session_state.get("appearance_settings", {}),
                     "advanced": st.session_state.get("advanced_settings", {})
                 }
-                import json
                 settings_json = json.dumps(settings_data, indent=2)
                 st.download_button(
                     label="Download Settings JSON",
