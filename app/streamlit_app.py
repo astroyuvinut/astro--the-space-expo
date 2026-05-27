@@ -189,8 +189,10 @@ if 'current_satellite' not in st.session_state:
     st.session_state.current_satellite = None
 if 'tracking_active' not in st.session_state:
     st.session_state.tracking_active = False
-if 'tracking_thread' not in st.session_state:
-    st.session_state.tracking_thread = None
+if 'viz_results' not in st.session_state:
+    st.session_state.viz_results = None
+if 'tracker_results' not in st.session_state:
+    st.session_state.tracker_results = None
 
 # Enhanced navigation with icons
 menu_options = {
@@ -408,9 +410,9 @@ elif menu_options[selected_menu] == "tracker":
         )
 
     if predict_btn:
+        st.session_state.tracker_results = None
         with st.spinner("🔄 Fetching TLE data and computing passes..."):
             try:
-                # Progress indicators
                 progress_bar = st.progress(0)
                 status_text = st.empty()
 
@@ -425,11 +427,11 @@ elif menu_options[selected_menu] == "tracker":
 
                 status_text.text("⚡ Computing pass predictions...")
                 progress_bar.progress(60)
-                start_time = time.time()
+                start_time_comp = time.time()
                 passes = compute_passes_optimized(
                     sat, lat, lon, alt, hours_ahead, min_elev, time_res
                 )
-                computation_time = time.time() - start_time
+                computation_time = time.time() - start_time_comp
 
                 progress_bar.progress(100)
                 status_text.text("✅ Computation completed!")
@@ -437,35 +439,13 @@ elif menu_options[selected_menu] == "tracker":
                 progress_bar.empty()
                 status_text.empty()
 
-                # Results Section
                 if passes:
-                    st.success(f"Found {len(passes)} satellite passes for {name}")
-
-                    # Summary Metrics
-                    col1, col2, col3, col4 = st.columns(4)
-                    with col1:
-                        st.metric("Total Passes", len(passes))
-                    with col2:
-                        avg_elev = sum(p.max_elevation_deg for p in passes) / len(passes)
-                        st.metric("Avg Max Elevation", f"{avg_elev:.1f}°")
-                    with col3:
-                        total_duration = sum((p.end - p.start).total_seconds() for p in passes) / 60
-                        st.metric("Total Duration", f"{total_duration:.1f} min")
-                    with col4:
-                        st.metric("Computation Time", f"{computation_time:.2f}s")
-
-                    # Enhanced Results Table
-                    st.markdown("#### 📋 Pass Schedule")
-
-                    # Prepare data for display
+                    now = dt.datetime.now(dt.timezone.utc)
                     pass_data = []
+                    chart_data = []
                     for i, p in enumerate(passes, 1):
-                        duration = p.end - p.start
-                        duration_min = duration.total_seconds() / 60
-                        now = dt.datetime.now(dt.timezone.utc)
-                        time_until = p.start - now
-                        hours_until = time_until.total_seconds() / 3600
-
+                        duration_min = (p.end - p.start).total_seconds() / 60
+                        hours_until = (p.start - now).total_seconds() / 3600
                         pass_data.append({
                             "Pass #": i,
                             "Start (UTC)": p.start.strftime("%Y-%m-%d %H:%M"),
@@ -475,77 +455,98 @@ elif menu_options[selected_menu] == "tracker":
                             "Duration (min)": round(duration_min, 1),
                             "Hours Until": round(hours_until, 1) if hours_until > 0 else "In Progress"
                         })
-
-                    df = pd.DataFrame(pass_data)
-
-                    # Display table with custom styling
-                    st.dataframe(
-                        df,
-                        use_container_width=True,
-                        column_config={
-                            "Pass #": st.column_config.NumberColumn("Pass #", width="small"),
-                            "Max Elev (°)": st.column_config.NumberColumn(
-                                "Max Elev (°)",
-                                help="Maximum elevation angle during pass"
-                            ),
-                            "Duration (min)": st.column_config.NumberColumn(
-                                "Duration (min)",
-                                help="Total pass duration in minutes"
-                            ),
-                            "Hours Until": st.column_config.TextColumn(
-                                "Hours Until",
-                                help="Time until pass starts"
-                            )
-                        }
-                    )
-
-                    # Export functionality
-                    csv_data = df.to_csv(index=False)
-                    st.download_button(
-                        label="📥 Download Pass Data (CSV)",
-                        data=csv_data,
-                        file_name=f"{name.replace(' ', '_')}_passes.csv",
-                        mime="text/csv",
-                        key="download-csv"
-                    )
-
-                    # Visualization
-                    st.markdown("#### 📊 Pass Visualization")
-
-                    # Elevation profile chart
-                    fig = go.Figure()
-                    for i, p in enumerate(passes):
-                        fig.add_trace(go.Scatter(
-                            x=[p.start, p.peak, p.end],
-                            y=[0, p.max_elevation_deg, 0],
-                            mode='lines+markers',
-                            name=f'Pass {i+1}',
-                            line={"width": 2},
-                            marker={"size": 6}
-                        ))
-
-                    fig.update_layout(
-                        title="Satellite Pass Elevation Profiles",
-                        xaxis_title="Time (UTC)",
-                        yaxis_title="Elevation (°)",
-                        showlegend=True,
-                        height=400
-                    )
-                    st.plotly_chart(fig, use_container_width=True)
-
+                        chart_data.append({
+                            "start": p.start.isoformat(),
+                            "peak": p.peak.isoformat(),
+                            "end": p.end.isoformat(),
+                            "max_elevation_deg": p.max_elevation_deg
+                        })
+                    st.session_state.tracker_results = {
+                        "name": name,
+                        "computation_time": computation_time,
+                        "pass_data": pass_data,
+                        "chart_data": chart_data,
+                        "csv_data": pd.DataFrame(pass_data).to_csv(index=False),
+                    }
                 else:
-                    st.warning("No satellite passes found in the selected time window.")
-                    st.markdown("""
-                    **💡 Suggestions to find more passes:**
-                    - Reduce the minimum elevation angle
-                    - Increase the search time window
-                    - Try a different satellite
-                    - Verify the satellite is currently operational
-                    """)
+                    st.session_state.tracker_results = {"name": name, "empty": True}
 
             except Exception as e:
                 st.error(f"❌ Error during computation: {str(e)}")
                 st.info("Please check your inputs and try again.")
+
+    # Render results (persists across reruns — not wiped by widget interactions)
+    if st.session_state.tracker_results:
+        res = st.session_state.tracker_results
+
+        if res.get("empty"):
+            st.warning("No satellite passes found in the selected time window.")
+            st.markdown("""
+            **💡 Suggestions to find more passes:**
+            - Reduce the minimum elevation angle
+            - Increase the search time window
+            - Try a different satellite
+            - Verify the satellite is currently operational
+            """)
+        else:
+            name = res["name"]
+            pass_data = res["pass_data"]
+            chart_data = res["chart_data"]
+
+            st.success(f"Found {len(pass_data)} satellite passes for {name}")
+
+            col1, col2, col3, col4 = st.columns(4)
+            with col1:
+                st.metric("Total Passes", len(pass_data))
+            with col2:
+                avg_elev = sum(p["Max Elev (°)"] for p in pass_data) / len(pass_data)
+                st.metric("Avg Max Elevation", f"{avg_elev:.1f}°")
+            with col3:
+                total_dur = sum(p["Duration (min)"] for p in pass_data)
+                st.metric("Total Duration", f"{total_dur:.1f} min")
+            with col4:
+                st.metric("Computation Time", f"{res['computation_time']:.2f}s")
+
+            st.markdown("#### 📋 Pass Schedule")
+            df = pd.DataFrame(pass_data)
+            st.dataframe(
+                df,
+                use_container_width=True,
+                column_config={
+                    "Pass #": st.column_config.NumberColumn("Pass #", width="small"),
+                    "Max Elev (°)": st.column_config.NumberColumn("Max Elev (°)"),
+                    "Duration (min)": st.column_config.NumberColumn("Duration (min)"),
+                    "Hours Until": st.column_config.TextColumn("Hours Until"),
+                }
+            )
+
+            st.download_button(
+                label="📥 Download Pass Data (CSV)",
+                data=res["csv_data"],
+                file_name=f"{name.replace(' ', '_')}_passes.csv",
+                mime="text/csv",
+                key="download-csv"
+            )
+
+            st.markdown("#### 📊 Pass Visualization")
+            fig = go.Figure()
+            for i, p in enumerate(chart_data):
+                fig.add_trace(go.Scatter(
+                    x=[p["start"], p["peak"], p["end"]],
+                    y=[0, p["max_elevation_deg"], 0],
+                    mode='lines+markers',
+                    name=f'Pass {i+1}',
+                    line={"width": 2},
+                    marker={"size": 6}
+                ))
+            fig.update_layout(
+                title="Satellite Pass Elevation Profiles",
+                xaxis_title="Time (UTC)",
+                yaxis_title="Elevation (°)",
+                showlegend=True,
+                height=400
+            )
+            st.plotly_chart(fig, use_container_width=True)
 
 elif menu_options[selected_menu] == "visualizer":
     st.markdown("### 🗺️ Advanced Ground Track Visualizer")
@@ -623,9 +624,9 @@ elif menu_options[selected_menu] == "visualizer":
         )
 
     if viz_btn:
+        st.session_state.viz_results = None
         with st.spinner("🔄 Computing orbital trajectory..."):
             try:
-                # Progress tracking
                 progress_bar = st.progress(0)
                 status_text = st.empty()
 
@@ -638,22 +639,26 @@ elif menu_options[selected_menu] == "visualizer":
                 ts = load.timescale()
                 sat = EarthSatellite(l1, l2, name, ts)
 
-                # Generate track points
                 t0 = ts.now()
                 times = ts.linspace(t0, t0 + dt.timedelta(hours=track_hours), track_resolution)
 
-                # Compute positions
-                lats, lons, alts, timestamps = [], [], [], []
-                for i, t in enumerate(times):
-                    geocentric = sat.at(t)
-                    subpoint = wgs84.subpoint(geocentric)
-                    lats.append(subpoint.latitude.degrees)
-                    lons.append(subpoint.longitude.degrees)
-                    alts.append(subpoint.elevation.m / 1000)  # Convert to km
-                    timestamps.append(t.utc_datetime().replace(tzinfo=None))
+                # Vectorized position computation (no for-loop)
+                geocentric = sat.at(times)
+                subpoints = wgs84.subpoint(geocentric)
+                lats = subpoints.latitude.degrees.tolist()
+                lons = subpoints.longitude.degrees.tolist()
+                alts = (subpoints.elevation.m / 1000).tolist()
+                timestamps = [t.utc_datetime().replace(tzinfo=None) for t in times]
 
-                    if (i + 1) % 20 == 0:
-                        progress_bar.progress(50 + int(40 * (i + 1) / track_resolution))
+                # Current real-time position
+                current_pos = None
+                if show_realtime:
+                    cur = wgs84.subpoint(sat.at(ts.now()))
+                    current_pos = {
+                        "lat": float(cur.latitude.degrees),
+                        "lon": float(cur.longitude.degrees),
+                        "alt_km": float(cur.elevation.m / 1000),
+                    }
 
                 progress_bar.progress(100)
                 status_text.text("✅ Track computation completed!")
@@ -661,146 +666,113 @@ elif menu_options[selected_menu] == "visualizer":
                 progress_bar.empty()
                 status_text.empty()
 
-                # Results Section
-                st.success(f"Generated {track_resolution} track points for {name}")
-
-                # Summary statistics
-                col1, col2, col3, col4 = st.columns(4)
-                with col1:
-                    st.metric("Track Duration", f"{track_hours} hours")
-                with col2:
-                    avg_alt = sum(alts) / len(alts)
-                    st.metric("Avg Altitude", f"{avg_alt:.1f} km")
-                with col3:
-                    max_lat = max(lats)
-                    min_lat = min(lats)
-                    st.metric("Latitude Range", f"{min_lat:.1f}° to {max_lat:.1f}°")
-                with col4:
-                    max_lon = max(lons)
-                    min_lon = min(lons)
-                    st.metric("Longitude Range", f"{min_lon:.1f}° to {max_lon:.1f}°")
-
-                # Interactive Map Visualization
-                st.markdown("#### 🌍 Interactive Ground Track Map")
-
-                # Create folium map
-                m = folium.Map(
-                    location=[lats[0], lons[0]],
-                    zoom_start=2,
-                    tiles='CartoDB positron'
-                )
-
-                # Add ground track
-                track_coords = list(zip(lats, lons))
-                folium.PolyLine(
-                    track_coords,
-                    color="#FF6B6B",
-                    weight=3,
-                    opacity=0.8,
-                    popup="Satellite Ground Track"
-                ).add_to(m)
-
-                # Add start and end markers
-                folium.Marker(
-                    [lats[0], lons[0]],
-                    popup=f"Start: {name}<br>Time: {timestamps[0].strftime('%H:%M UTC')}<br>Alt: {alts[0]:.1f} km",
-                    icon=folium.Icon(color='green', icon='play')
-                ).add_to(m)
-
-                folium.Marker(
-                    [lats[-1], lons[-1]],
-                    popup=f"End: {name}<br>Time: {timestamps[-1].strftime('%H:%M UTC')}<br>Alt: {alts[-1]:.1f} km",
-                    icon=folium.Icon(color='red', icon='stop')
-                ).add_to(m)
-
-                # Add current position if requested
-                if show_realtime:
-                    current_t = ts.now()
-                    current_geocentric = sat.at(current_t)
-                    current_subpoint = wgs84.subpoint(current_geocentric)
-                    folium.Marker(
-                        [current_subpoint.latitude.degrees, current_subpoint.longitude.degrees],
-                        popup=f"Current Position<br>Alt: {current_subpoint.elevation.m/1000:.1f} km",
-                        icon=folium.Icon(color='blue', icon='satellite')
-                    ).add_to(m)
-
-                # Display map
-                st_folium(m, width=None, height=500)
-
-                # Altitude Profile Chart
-                st.markdown("#### 📈 Altitude Profile")
-
-                fig = go.Figure()
-                fig.add_trace(go.Scatter(
-                    x=timestamps,
-                    y=alts,
-                    mode='lines',
-                    name='Altitude',
-                    line={"color": '#4ECDC4', "width": 2},
-                    fill='tozeroy',
-                    fillcolor='rgba(78, 205, 196, 0.3)'
-                ))
-
-                fig.update_layout(
-                    title="Satellite Altitude vs Time",
-                    xaxis_title="Time (UTC)",
-                    yaxis_title="Altitude (km)",
-                    height=300,
-                    showlegend=False
-                )
-                st.plotly_chart(fig, use_container_width=True)
-
-                # 3D Orbital Visualization (simplified)
-                st.markdown("#### 🌐 3D Orbital Path")
-
-                # Create 3D scatter plot
-                fig_3d = go.Figure(data=[go.Scatter3d(
-                    x=lons,
-                    y=lats,
-                    z=alts,
-                    mode='lines',
-                    line={"color": '#FF6B6B', "width": 4},
-                    name='Orbital Path'
-                )])
-
-                fig_3d.update_layout(
-                    title="3D Orbital Trajectory",
-                    scene={
-                        "xaxis_title": 'Longitude (°)',
-                        "yaxis_title": 'Latitude (°)',
-                        "zaxis_title": 'Altitude (km)',
-                        "aspectmode": 'manual',
-                        "aspectratio": {"x": 1, "y": 1, "z": 0.5}
-                    },
-                    height=500
-                )
-                st.plotly_chart(fig_3d, use_container_width=True)
-
-                # Export options
-                st.markdown("#### 💾 Export Data")
-                col1, col2 = st.columns(2)
-                with col1:
-                    track_df = pd.DataFrame({
-                        'Timestamp': timestamps,
-                        'Latitude': lats,
-                        'Longitude': lons,
-                        'Altitude_km': alts
-                    })
-                    csv_track = track_df.to_csv(index=False)
-                    st.download_button(
-                        label="📥 Download Track Data (CSV)",
-                        data=csv_track,
-                        file_name=f"{name.replace(' ', '_')}_ground_track.csv",
-                        mime="text/csv",
-                        key="download-track"
-                    )
-                with col2:
-                    if st.button("🔄 Recalculate with Different Settings"):
-                        st.rerun()
+                st.session_state.viz_results = {
+                    "name": name,
+                    "lats": lats,
+                    "lons": lons,
+                    "alts": alts,
+                    "timestamp_strs": [t.strftime("%Y-%m-%d %H:%M") for t in timestamps],
+                    "track_hours": track_hours,
+                    "track_resolution": track_resolution,
+                    "current_pos": current_pos,
+                }
 
             except Exception as e:
                 st.error(f"❌ Error generating visualization: {str(e)}")
                 st.info("Please check your inputs and try again.")
+
+    # Render results — lives outside if-block so it persists across reruns
+    if st.session_state.viz_results:
+        r = st.session_state.viz_results
+        lats = r["lats"]
+        lons = r["lons"]
+        alts = r["alts"]
+        timestamp_strs = r["timestamp_strs"]
+        name = r["name"]
+        track_hours = r["track_hours"]
+        track_resolution = r["track_resolution"]
+        current_pos = r["current_pos"]
+
+        st.success(f"Generated {track_resolution} track points for {name}")
+
+        col1, col2, col3, col4 = st.columns(4)
+        with col1:
+            st.metric("Track Duration", f"{track_hours} hours")
+        with col2:
+            st.metric("Avg Altitude", f"{sum(alts)/len(alts):.1f} km")
+        with col3:
+            st.metric("Latitude Range", f"{min(lats):.1f}° to {max(lats):.1f}°")
+        with col4:
+            st.metric("Longitude Range", f"{min(lons):.1f}° to {max(lons):.1f}°")
+
+        st.markdown("#### 🌍 Interactive Ground Track Map")
+        m = folium.Map(location=[lats[0], lons[0]], zoom_start=2, tiles='CartoDB positron')
+        folium.PolyLine(list(zip(lats, lons)), color="#FF6B6B", weight=3, opacity=0.8).add_to(m)
+        folium.Marker(
+            [lats[0], lons[0]],
+            popup=f"Start: {name}<br>{timestamp_strs[0]} UTC<br>Alt: {alts[0]:.1f} km",
+            icon=folium.Icon(color='green', icon='play')
+        ).add_to(m)
+        folium.Marker(
+            [lats[-1], lons[-1]],
+            popup=f"End: {name}<br>{timestamp_strs[-1]} UTC<br>Alt: {alts[-1]:.1f} km",
+            icon=folium.Icon(color='red', icon='stop')
+        ).add_to(m)
+        if current_pos:
+            folium.Marker(
+                [current_pos["lat"], current_pos["lon"]],
+                popup=f"Now: {name}<br>Alt: {current_pos['alt_km']:.1f} km",
+                icon=folium.Icon(color='blue', icon='info-sign')
+            ).add_to(m)
+        # returned_objects=[] prevents map interactions from triggering a full rerun
+        st_folium(m, width=None, height=500, returned_objects=[])
+
+        st.markdown("#### 📈 Altitude Profile")
+        fig = go.Figure()
+        fig.add_trace(go.Scatter(
+            x=timestamp_strs, y=alts, mode='lines', name='Altitude',
+            line={"color": '#4ECDC4', "width": 2},
+            fill='tozeroy', fillcolor='rgba(78, 205, 196, 0.3)'
+        ))
+        fig.update_layout(
+            title="Satellite Altitude vs Time", xaxis_title="Time (UTC)",
+            yaxis_title="Altitude (km)", height=300, showlegend=False
+        )
+        st.plotly_chart(fig, use_container_width=True)
+
+        st.markdown("#### 🌐 3D Orbital Path")
+        fig_3d = go.Figure(data=[go.Scatter3d(
+            x=lons, y=lats, z=alts, mode='lines',
+            line={"color": '#FF6B6B', "width": 4}, name='Orbital Path'
+        )])
+        fig_3d.update_layout(
+            title="3D Orbital Trajectory",
+            scene={
+                "xaxis_title": 'Longitude (°)', "yaxis_title": 'Latitude (°)',
+                "zaxis_title": 'Altitude (km)', "aspectmode": 'manual',
+                "aspectratio": {"x": 1, "y": 1, "z": 0.5}
+            },
+            height=500
+        )
+        st.plotly_chart(fig_3d, use_container_width=True)
+
+        st.markdown("#### 💾 Export Data")
+        col1, col2 = st.columns(2)
+        with col1:
+            track_df = pd.DataFrame({
+                'Timestamp': timestamp_strs, 'Latitude': lats,
+                'Longitude': lons, 'Altitude_km': alts
+            })
+            st.download_button(
+                label="📥 Download Track Data (CSV)",
+                data=track_df.to_csv(index=False),
+                file_name=f"{name.replace(' ', '_')}_ground_track.csv",
+                mime="text/csv", key="download-track"
+            )
+        with col2:
+            if st.button("🗑️ Clear / New Track"):
+                st.session_state.viz_results = None
+                st.rerun()
 
 elif menu_options[selected_menu] == "database":
     st.markdown("### 📊 Satellite Database Explorer")
