@@ -70,12 +70,12 @@ st.markdown("""
     .main-header {
         font-size: 3rem;
         font-weight: 700;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
+        color: white !important;
+        -webkit-text-fill-color: white !important;
         text-align: center;
         margin-bottom: 2rem;
         line-height: 1.2;
+        text-shadow: 0 2px 8px rgba(0,0,0,0.3);
     }
 
     .hero-section {
