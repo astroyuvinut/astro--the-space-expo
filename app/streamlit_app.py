@@ -51,7 +51,7 @@ st.set_page_config(
     page_title="Space Exploration AI",
     page_icon="🛰️",
     layout="wide",
-    initial_sidebar_state="auto",
+    initial_sidebar_state="collapsed",
     menu_items={
         'Get Help': 'https://github.com/your-repo/space-expo',
         'Report a bug': 'https://github.com/your-repo/space-expo/issues',
@@ -74,18 +74,28 @@ if 'tracker_results' not in st.session_state:
 # Enhanced navigation with icons
 menu_options = {
     "Dashboard": "dashboard",
-    "Satellite Tracker": "tracker",
-    "Ground Track Visualizer": "visualizer",
-    "Satellite Database": "database",
+    "Pass predictor": "tracker",
+    "Ground track": "visualizer",
+    "Catalog": "database",
     "Settings": "settings",
-    "About": "about"
+    "About": "about",
 }
 
-selected_menu = st.sidebar.selectbox(
-    "Navigation",
-    list(menu_options.keys()),
-    format_func=lambda x: x
-)
+if "_nav_to" in st.session_state:
+    st.session_state.nav = st.session_state.pop("_nav_to")
+
+with st.sidebar:
+    st.markdown(
+        '<div class="nav-brand">Space<br>Exploration</div>'
+        '<div class="nav-brand-sub">Orbital tracking</div>',
+        unsafe_allow_html=True,
+    )
+    selected_menu = st.radio(
+        "Navigation",
+        list(menu_options.keys()),
+        key="nav",
+        label_visibility="collapsed",
+    )
 
 if menu_options[selected_menu] == "dashboard":
     st.markdown("""
@@ -147,14 +157,15 @@ if menu_options[selected_menu] == "dashboard":
     with col1:
         if st.button("Track the ISS", type="primary", use_container_width=True):
             st.session_state.current_satellite = 25544
+            st.session_state._nav_to = "Pass predictor"
             st.rerun()
     with col2:
         if st.button("Predict passes", use_container_width=True):
-            st.session_state.selected_menu = "tracker"
+            st.session_state._nav_to = "Pass predictor"
             st.rerun()
     with col3:
         if st.button("Browse catalog", use_container_width=True):
-            st.session_state.selected_menu = "database"
+            st.session_state._nav_to = "Catalog"
             st.rerun()
 
 elif menu_options[selected_menu] == "tracker":
@@ -440,7 +451,7 @@ elif menu_options[selected_menu] == "visualizer":
                 st.info(f"NORAD ID: {viz_norad}")
 
         with col2:
-            st.markdown("#### ⏱Visualization Settings")
+            st.markdown("#### Visualization Settings")
             track_hours = st.slider(
                 "Track Duration (hours)",
                 min_value=1,
@@ -776,11 +787,11 @@ elif menu_options[selected_menu] == "database":
             with cols[i % 4]:
                 if st.button(f"Predict {sat['name'][:15]}...", key=f"predict_{sat['norad']}", use_container_width=True):
                     st.session_state.selected_satellite = sat['norad']
-                    st.session_state.selected_menu = "tracker"
+                    st.session_state._nav_to = "Pass predictor"
                     st.rerun()
                 if st.button(f"Track {sat['name'][:15]}...", key=f"track_{sat['norad']}", use_container_width=True):
                     st.session_state.selected_satellite = sat['norad']
-                    st.session_state.selected_menu = "visualizer"
+                    st.session_state._nav_to = "Ground track"
                     st.rerun()
 
         # Bulk actions
@@ -825,14 +836,12 @@ elif menu_options[selected_menu] == "database":
 
 elif menu_options[selected_menu] == "settings":
     st.markdown("### Settings")
-    st.markdown("Configure your preferences and customize the Space Exploration AI experience")
 
     # Settings tabs
     tab1, tab2, tab3, tab4 = st.tabs(["Location", "Preferences", "Appearance", "Advanced"])
 
     with tab1:
         st.markdown("#### Default Location Settings")
-        st.markdown("Set your default observation location for quick access")
 
         col1, col2 = st.columns(2)
         with col1:
@@ -1063,7 +1072,6 @@ elif menu_options[selected_menu] == "settings":
 
 elif menu_options[selected_menu] == "about":
     st.markdown("### About")
-    st.markdown("Advanced satellite pass prediction and orbital analytics platform")
 
     # Developer info
     col1, col2 = st.columns([1, 2])

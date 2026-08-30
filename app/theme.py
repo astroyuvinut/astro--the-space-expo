@@ -381,9 +381,8 @@ html, body, [data-testid="stAppViewContainer"] * {
     flex: 1 1 100% !important;
 }
 
-[data-testid="stHeader"] button,
-[data-testid="stSidebarCollapseButton"] button,
-[data-testid="stBaseButton-headerNoPadding"],
+[data-testid="stHeader"] button:not([data-testid="stExpandSidebarButton"]),
+[data-testid="stBaseButton-headerNoPadding"]:not([data-testid="stExpandSidebarButton"]),
 [data-testid="stBaseButton-header"] {
     border: 0 !important;
     background: transparent !important;
@@ -596,13 +595,7 @@ hr { border-color: var(--border-hair); }
         flex: 1 1 100% !important;
     }
 
-    /* sidebar overlays rather than consuming width */
     [data-testid="stSidebar"] {
-        position: absolute;
-        top: 0;
-        bottom: 0;
-        left: 0;
-        z-index: 200;
         box-shadow: 0 0 40px rgba(0, 0, 0, 0.6);
     }
 
@@ -630,6 +623,158 @@ hr { border-color: var(--border-hair); }
 
 /* nothing on the page may push the frame sideways */
 [data-testid="stAppViewContainer"] { max-width: 100vw; }
+
+/* ---------- 7. Navigation ----------
+
+   The sidebar starts closed and is opened by a hamburger. Streamlit ships a
+   chevron ligature for both controls; the glyph is hidden and the bars are
+   drawn in CSS so the button reads as a menu control at a glance. */
+
+[data-testid="stExpandSidebarButton"],
+[data-testid="stSidebarCollapseButton"] > button[data-testid] {
+    position: relative;
+    width: 40px !important;
+    height: 40px !important;
+    padding: 0 !important;
+    border: 1px solid var(--border-hair) !important;
+    border-radius: 11px !important;
+    background: rgba(11, 11, 11, 0.72) !important;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    transition: border-color 0.2s ease, background 0.2s ease;
+}
+
+[data-testid="stExpandSidebarButton"]:hover,
+[data-testid="stSidebarCollapseButton"] > button[data-testid]:hover {
+    border-color: rgba(232, 163, 77, 0.55) !important;
+    background: rgba(232, 163, 77, 0.08) !important;
+}
+
+/* hide the chevron ligature Streamlit puts inside */
+[data-testid="stExpandSidebarButton"] span,
+[data-testid="stSidebarCollapseButton"] > button[data-testid] span {
+    display: none !important;
+}
+
+/* three bars: the element is the middle bar, the shadows are the outer two */
+[data-testid="stExpandSidebarButton"]::before,
+[data-testid="stSidebarCollapseButton"] > button[data-testid]::before {
+    content: '';
+    position: absolute;
+    left: 11px;
+    right: 11px;
+    top: 19px;
+    height: 1.5px;
+    border-radius: 2px;
+    background: var(--cream);
+    box-shadow: 0 -6px 0 var(--cream), 0 6px 0 var(--cream);
+}
+
+/* open state closes the menu, so the same control becomes a cross */
+[data-testid="stSidebarCollapseButton"] > button[data-testid]::before {
+    box-shadow: none;
+    transform: rotate(45deg);
+}
+
+[data-testid="stSidebarCollapseButton"] > button[data-testid]::after {
+    content: '';
+    position: absolute;
+    left: 11px;
+    right: 11px;
+    top: 19px;
+    height: 1.5px;
+    border-radius: 2px;
+    background: var(--cream);
+    transform: rotate(-45deg);
+}
+
+/* keep the hamburger clear of the page content when the sidebar is closed */
+[data-testid="stExpandSidebarButton"] {
+    margin-left: 4px;
+}
+
+/* ---------- the menu itself ---------- */
+
+[data-testid="stSidebarUserContent"] {
+    padding-top: 0.5rem;
+}
+
+.nav-brand {
+    font-family: var(--font-display);
+    text-transform: uppercase;
+    font-size: 1.35rem;
+    line-height: 0.9;
+    letter-spacing: -0.01em;
+    color: var(--cream);
+    margin-bottom: 2px;
+}
+
+.nav-brand-sub {
+    font-size: 0.55rem;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--text-faint);
+    margin-bottom: 1.75rem;
+}
+
+/* radio group rendered as a menu list rather than radio buttons */
+[data-testid="stSidebar"] [role="radiogroup"] {
+    gap: 2px;
+}
+
+[data-testid="stSidebar"] [role="radiogroup"] label {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    padding: 10px 12px;
+    border-radius: 9px;
+    border: 1px solid transparent;
+    cursor: pointer;
+    transition: background 0.18s ease, border-color 0.18s ease;
+}
+
+[data-testid="stSidebar"] [role="radiogroup"] label:hover {
+    background: rgba(255, 255, 255, 0.04);
+}
+
+/* Hide the radio dot without removing it: selection is shown by the row.
+   display:none here also hides the <input> and the row stops responding. */
+[data-testid="stSidebar"] [role="radiogroup"] label > div:first-child {
+    width: 0 !important;
+    height: 0 !important;
+    min-width: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    opacity: 0;
+    overflow: hidden;
+}
+
+[data-testid="stSidebar"] [role="radiogroup"] label p {
+    font-size: 0.68rem !important;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-muted) !important;
+    margin: 0 !important;
+}
+
+[data-testid="stSidebar"] [role="radiogroup"] label:has(input:checked) {
+    background: rgba(232, 163, 77, 0.10);
+    border-color: rgba(232, 163, 77, 0.30);
+}
+
+[data-testid="stSidebar"] [role="radiogroup"] label:has(input:checked) p {
+    color: var(--cream) !important;
+}
+
+@media (max-width: 768px) {
+    [data-testid="stExpandSidebarButton"],
+    [data-testid="stSidebarCollapseButton"] > button[data-testid] {
+        width: 38px !important;
+        height: 38px !important;
+    }
+}
 
 @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after {

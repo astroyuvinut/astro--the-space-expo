@@ -16,7 +16,7 @@ st.set_page_config(
     page_title="Satellite Pass Predictor Pro",
     page_icon="🛰️",
     layout="wide",
-    initial_sidebar_state="auto"
+    initial_sidebar_state="collapsed"
 )
 
 apply_theme()
@@ -190,7 +190,11 @@ st.markdown("""
 """, unsafe_allow_html=True)
 # Controls
 with st.sidebar:
-    st.markdown('<h2 class="sidebar-header">Controls</h2>', unsafe_allow_html=True)
+    st.markdown(
+        '<div class="nav-brand">Pass<br>Predictor</div>'
+        '<div class="nav-brand-sub">Orbital tracking</div>',
+        unsafe_allow_html=True,
+    )
 
     # Observer position
     st.markdown('<div class="section-header">Observer position</div>', unsafe_allow_html=True)
@@ -438,7 +442,7 @@ if go:
         st.info("""
         **Optimization Suggestions:**
         - Lower minimum elevation angle
-        - ⏰ Increase search window (more hours)
+        - Increase search window (more hours)
         - Try different satellite
         - Check if satellite is operational
         - Adjust observer location
@@ -556,7 +560,7 @@ if go:
 
         with col3:
             avg_duration = sum((p.end - p.start).total_seconds() for p in passes) / len(passes) / 60
-            st.metric("⏱Avg Duration", f"{avg_duration:.1f} min")
+            st.metric("Avg Duration", f"{avg_duration:.1f} min")
 
         with col4:
             best_pass = max(passes, key=lambda p: p.max_elevation_deg)
@@ -606,7 +610,7 @@ if go:
                 st.metric("Time Resolution", f"{time_step} min")
 
             with col2:
-                st.metric("⏰ Search Window", f"{hours} hours")
+                st.metric("Search Window", f"{hours} hours")
                 data_points = int(hours * 60 / time_step)
                 st.metric("Data Points", f"~{data_points:,}")
 
@@ -624,7 +628,7 @@ if go:
         - Longer passes = more observation time
         - Clear weather essential for low elevation passes
 
-        **⏰ Timing Considerations:**
+        **Timing Considerations:**
         - Convert UTC times to your local timezone
         - Account for setup time before pass starts
         - Have backup plans for weather changes
