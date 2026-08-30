@@ -112,8 +112,11 @@ html, body, [data-testid="stAppViewContainer"] * {
 }
 
 [data-testid="stAppViewContainer"] h1,
+[data-testid="stAppViewContainer"] h1 *,
 [data-testid="stAppViewContainer"] h2,
-[data-testid="stAppViewContainer"] h3 {
+[data-testid="stAppViewContainer"] h2 *,
+[data-testid="stAppViewContainer"] h3,
+[data-testid="stAppViewContainer"] h3 * {
     font-family: var(--font-display);
     text-transform: uppercase;
     letter-spacing: -0.02em;
@@ -140,7 +143,8 @@ html, body, [data-testid="stAppViewContainer"] * {
 }
 
 /* h4 stays in the body face — display face on small headings turns to mush */
-[data-testid="stAppViewContainer"] h4 {
+[data-testid="stAppViewContainer"] h4,
+[data-testid="stAppViewContainer"] h4 * {
     font-family: var(--font-body);
     font-size: 0.68rem;
     font-weight: 600;

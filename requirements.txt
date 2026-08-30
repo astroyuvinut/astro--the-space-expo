@@ -6,8 +6,16 @@ skyfield>=1.49
 sgp4>=2.22
 typer>=0.12
 rich>=13.7
-streamlit>=1.40
-streamlit-folium>=0.22
-plotly>=5.17
-folium>=0.16
 scipy>=1.11
+
+# Pinned exactly, on purpose. app/theme.py styles Streamlit through its
+# internal data-testid attributes and DOM shape, which are not a public API and
+# change between releases. An unpinned range let the deploy install a newer
+# Streamlit than the one the theme was written against: 1.62 wraps heading text
+# in a <span> that 1.48 did not, which silently reverted every headline from
+# Anton to Inter and made live look nothing like local.
+# Before bumping this, re-check the theme against the new version.
+streamlit==1.62.0
+streamlit-folium==0.27.2
+plotly==7.0.0
+folium==0.20.0
