@@ -126,19 +126,6 @@ st.markdown("""
     margin-bottom: 4px;
 }
 
-/* The one permitted exception to the single-accent rule, at 8px. */
-.status-indicator {
-    display: inline-block;
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    flex: none;
-}
-
-.status-online  { background: var(--green); box-shadow: 0 0 8px var(--green); }
-.status-active  { background: var(--amber-core); }
-.status-standby { background: var(--text-faint); }
-
 .dataframe-container {
     border: 1px solid var(--border-hair);
     border-radius: 10px;
@@ -164,7 +151,7 @@ col1, col2 = st.columns(2)
 with col1:
     st.markdown(
         '<div class="metric-card">'
-        '<div class="label"><span class="status-indicator status-online"></span>Element source</div>'
+        '<div class="label">Element source</div>'
         '<div class="value">Celestrak</div>'
         '<div class="note">Fetched on demand, cached for one hour</div>'
         '</div>',
@@ -173,7 +160,7 @@ with col1:
 with col2:
     st.markdown(
         '<div class="metric-card">'
-        '<div class="label"><span class="status-indicator status-active"></span>Propagator</div>'
+        '<div class="label">Propagator</div>'
         '<div class="value">SGP4 / Skyfield</div>'
         '<div class="note">Vectorised sampling over the requested window</div>'
         '</div>',

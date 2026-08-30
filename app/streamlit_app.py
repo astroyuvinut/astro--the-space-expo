@@ -100,7 +100,7 @@ with st.sidebar:
 if menu_options[selected_menu] == "dashboard":
     st.markdown("""
     <div class="hero">
-        <div class="badge"><span class="dot"></span> Live TLE feed connected</div>
+        <div class="kicker">Skyfield &middot; SGP4 &middot; Celestrak elements</div>
         <h1>Know where<br>everything is<br>overhead</h1>
         <p class="subhead">
             Satellite pass prediction and orbital analysis, computed from

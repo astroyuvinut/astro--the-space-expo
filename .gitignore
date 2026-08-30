@@ -18,3 +18,7 @@ htmlcov/
 .mypy_cache/
 *.log
 /data/
+
+# Screen recordings and design reference video
+*.mov
+*.mp4

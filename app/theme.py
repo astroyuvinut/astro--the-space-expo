@@ -38,7 +38,6 @@ _CSS = """
     --amber-mid:  #C97B2A;
     --amber-deep: #392407;
 
-    --green: #35EF46;
 
     --font-display: 'Anton', 'Archivo Black', Impact, sans-serif;
     --font-body:    'Inter', system-ui, sans-serif;
@@ -176,6 +175,10 @@ html, body, [data-testid="stAppViewContainer"] * {
     color: var(--text-faint);
 }
 
+/* Streamlit hangs a deep-link anchor off every heading. Navigation here is
+   the drawer, not URL fragments, so the icon is only clutter on hover. */
+[data-testid="stHeaderActionElements"] { display: none !important; }
+
 /* ---------- 3. Hero ---------- */
 
 .hero {
@@ -216,29 +219,16 @@ html, body, [data-testid="stAppViewContainer"] * {
 
 .hero h1 { max-width: 14ch; }
 
-.badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    border: 1px solid var(--border-hair);
-    background: var(--surface-card);
-    border-radius: 100px;
-    padding: 7px 14px;
-    margin-bottom: 1.75rem;
+/* A plain kicker above the headline. This replaced a pill with a glowing
+   green dot reading "live feed connected", which was never wired to the
+   fetch and so claimed a connection even when Celestrak was unreachable. */
+.kicker {
     font-size: 0.6rem;
     font-weight: 600;
-    letter-spacing: 0.14em;
+    letter-spacing: 0.18em;
     text-transform: uppercase;
     color: var(--text-faint);
-}
-
-.dot {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background: var(--green);
-    box-shadow: 0 0 8px var(--green);
-    flex: none;
+    margin-bottom: 1.5rem;
 }
 
 /* ---------- 4. Cards. Two, not six. ---------- */
