@@ -15,6 +15,7 @@ from skyfield.api import EarthSatellite, load, wgs84
 from streamlit_folium import st_folium
 
 from src.orbits.pass_predictor_optimized import compute_passes_optimized, fetch_tle_cached
+from theme import apply_theme
 
 # Emergency TLEs fetched 2026-05-27 — used only if ALL network sources fail
 _EMERGENCY_TLES = {
@@ -50,7 +51,7 @@ st.set_page_config(
     page_title="Space Exploration AI",
     page_icon="🛰️",
     layout="wide",
-    initial_sidebar_state="expanded",
+    initial_sidebar_state="auto",
     menu_items={
         'Get Help': 'https://github.com/your-repo/space-expo',
         'Report a bug': 'https://github.com/your-repo/space-expo/issues',
@@ -58,131 +59,7 @@ st.set_page_config(
     }
 )
 
-# Enhanced CSS with dark mode support
-st.markdown("""
-<style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
-
-    * {
-        font-family: 'Inter', sans-serif;
-    }
-
-    .main-header {
-        font-size: 3rem;
-        font-weight: 700;
-        color: white !important;
-        -webkit-text-fill-color: white !important;
-        text-align: center;
-        margin-bottom: 2rem;
-        line-height: 1.2;
-        text-shadow: 0 2px 8px rgba(0,0,0,0.3);
-    }
-
-    .hero-section {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        color: white;
-        padding: 3rem 2rem;
-        border-radius: 20px;
-        margin-bottom: 2rem;
-        text-align: center;
-    }
-
-    .feature-card {
-        background: rgba(255,255,255,0.1);
-        backdrop-filter: blur(10px);
-        border: 1px solid rgba(255,255,255,0.2);
-        border-radius: 15px;
-        padding: 1.5rem;
-        margin: 0.5rem;
-        transition: transform 0.3s ease;
-    }
-
-    .feature-card:hover {
-        transform: translateY(-5px);
-    }
-
-    .metric-card {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        color: white;
-        border-radius: 15px;
-        padding: 1.5rem;
-        text-align: center;
-        box-shadow: 0 8px 32px rgba(0,0,0,0.1);
-    }
-
-    .status-indicator {
-        display: inline-block;
-        width: 12px;
-        height: 12px;
-        border-radius: 50%;
-        margin-right: 8px;
-    }
-
-    .status-active { background-color: #00ff00; }
-    .status-inactive { background-color: #ff4444; }
-
-    .satellite-card {
-        background: rgba(255,255,255,0.05);
-        border-radius: 15px;
-        padding: 1.5rem;
-        margin: 1rem 0;
-        border-left: 5px solid #667eea;
-        transition: all 0.3s ease;
-    }
-
-    .satellite-card:hover {
-        box-shadow: 0 8px 25px rgba(102,126,234,0.3);
-        transform: translateY(-2px);
-    }
-
-    .pass-table {
-        border-radius: 10px;
-        overflow: hidden;
-        box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-    }
-
-    .real-time-display {
-        background: #1a1a1a;
-        color: #00ff00;
-        font-family: 'Courier New', monospace;
-        padding: 1rem;
-        border-radius: 10px;
-        border: 2px solid #333;
-    }
-
-    .control-panel {
-        background: rgba(255,255,255,0.04);
-        border-radius: 15px;
-        padding: 2rem;
-        margin-bottom: 2rem;
-        border: 1px solid rgba(255,255,255,0.1);
-    }
-
-    .tab-content {
-        padding: 2rem 0;
-    }
-
-    .stTabs [data-baseweb="tab-list"] {
-        gap: 2px;
-    }
-
-    .stTabs [data-baseweb="tab"] {
-        border-radius: 10px 10px 0 0;
-        padding: 10px 20px;
-        background-color: #f1f3f4;
-    }
-
-    .stTabs [aria-selected="true"] {
-        background-color: #667eea !important;
-        color: white !important;
-    }
-
-    @media (max-width: 768px) {
-        .main-header { font-size: 2rem; }
-        .hero-section { padding: 2rem 1rem; }
-    }
-</style>
-""", unsafe_allow_html=True)
+apply_theme()
 
 # Initialize session state
 if 'current_satellite' not in st.session_state:
@@ -196,12 +73,12 @@ if 'tracker_results' not in st.session_state:
 
 # Enhanced navigation with icons
 menu_options = {
-    "🏠 Dashboard": "dashboard",
-    "🛰️ Satellite Tracker": "tracker",
-    "🗺️ Ground Track Visualizer": "visualizer",
-    "📊 Satellite Database": "database",
-    "⚙️ Settings": "settings",
-    "👨‍💻 About": "about"
+    "Dashboard": "dashboard",
+    "Satellite Tracker": "tracker",
+    "Ground Track Visualizer": "visualizer",
+    "Satellite Database": "database",
+    "Settings": "settings",
+    "About": "about"
 }
 
 selected_menu = st.sidebar.selectbox(
@@ -211,105 +88,83 @@ selected_menu = st.sidebar.selectbox(
 )
 
 if menu_options[selected_menu] == "dashboard":
-    # Hero Section
     st.markdown("""
-    <div class="hero-section">
-        <h1 class="main-header">🛰️ Space Exploration AI</h1>
-        <p style="font-size: 1.3rem; margin: 1rem 0; opacity: 0.9;">
-            Advanced Satellite Pass Prediction & Orbital Analytics Platform
-        </p>
-        <p style="font-size: 1.1rem; opacity: 0.8;">
-            Real-time tracking, precise predictions, and comprehensive orbital data analysis
+    <div class="hero">
+        <div class="badge"><span class="dot"></span> Live TLE feed connected</div>
+        <h1>Know where<br>everything is<br>overhead</h1>
+        <p class="subhead">
+            Satellite pass prediction and orbital analysis, computed from
+            current two-line elements with SGP4.
         </p>
     </div>
     """, unsafe_allow_html=True)
 
-    # Quick Stats
-    col1, col2, col3, col4 = st.columns(4)
+    # Two cards, not six. Every number here is checkable — no invented uptime figures.
+    col1, col2 = st.columns(2)
     with col1:
         st.markdown("""
-        <div class="metric-card">
-            <h3>🚀 Active Satellites</h3>
-            <p style="font-size: 2rem; margin: 0.5rem 0;">2,000+</p>
-            <small>Tracked globally</small>
+        <div class="stat-card">
+            <div class="label"><span>Propagator</span><span>SGP4</span></div>
+            <div class="value">Skyfield</div>
+            <div class="note">Sub-kilometer accuracy within days of TLE epoch</div>
         </div>
         """, unsafe_allow_html=True)
     with col2:
         st.markdown("""
-        <div class="metric-card">
-            <h3>⚡ Real-time Updates</h3>
-            <p style="font-size: 2rem; margin: 0.5rem 0;">24/7</p>
-            <small>TLE data refresh</small>
-        </div>
-        """, unsafe_allow_html=True)
-    with col3:
-        st.markdown("""
-        <div class="metric-card">
-            <h3>🎯 Prediction Accuracy</h3>
-            <p style="font-size: 2rem; margin: 0.5rem 0;">99.9%</p>
-            <small>Orbital calculations</small>
-        </div>
-        """, unsafe_allow_html=True)
-    with col4:
-        st.markdown("""
-        <div class="metric-card">
-            <h3>🌍 Global Coverage</h3>
-            <p style="font-size: 2rem; margin: 0.5rem 0;">100%</p>
-            <small>Earth observation</small>
+        <div class="stat-card">
+            <div class="label"><span>Element source</span><span>Celestrak</span></div>
+            <div class="value">Hourly refresh</div>
+            <div class="note">Cached one hour, with offline fallback elements</div>
         </div>
         """, unsafe_allow_html=True)
 
-    # Feature Highlights
-    st.markdown("### 🚀 Key Features")
+    st.markdown("### What it does")
     col1, col2, col3 = st.columns(3)
     with col1:
         st.markdown("""
         <div class="feature-card">
-            <h4>🛰️ Real-Time Tracking</h4>
-            <p>Live satellite position monitoring with orbital trajectory visualization</p>
+            <div class="title">Pass<br>prediction</div>
+            <div class="body">Rise, culmination and set times for any observer position, with elevation and azimuth at each step.</div>
         </div>
         """, unsafe_allow_html=True)
     with col2:
         st.markdown("""
-        <div class="feature-card">
-            <h4>📊 Advanced Analytics</h4>
-            <p>Comprehensive pass prediction with elevation profiles and timing analysis</p>
+        <div class="feature-card offset-1">
+            <div class="title">Ground<br>tracks</div>
+            <div class="body">Sub-satellite path over the Earth, altitude profile, and the orbit rendered in three dimensions.</div>
         </div>
         """, unsafe_allow_html=True)
     with col3:
         st.markdown("""
-        <div class="feature-card">
-            <h4>🔬 Scientific Precision</h4>
-            <p>High-accuracy orbital mechanics using Skyfield and TLE data</p>
+        <div class="feature-card offset-2">
+            <div class="title">Catalog<br>search</div>
+            <div class="body">Filter the tracked catalog by name, orbit class and inclination, then export what you select.</div>
         </div>
         """, unsafe_allow_html=True)
 
-    # Quick Actions
-    st.markdown("### ⚡ Quick Start")
+    st.markdown("### Start tracking")
     col1, col2, col3 = st.columns(3)
     with col1:
-        if st.button("🛰️ Track ISS Now", type="primary", use_container_width=True):
+        if st.button("Track the ISS", type="primary", use_container_width=True):
             st.session_state.current_satellite = 25544
             st.rerun()
     with col2:
-        if st.button("📊 View Pass Predictions", type="secondary", use_container_width=True):
+        if st.button("Predict passes", use_container_width=True):
             st.session_state.selected_menu = "tracker"
             st.rerun()
     with col3:
-        if st.button("🗺️ Explore Satellite Database", type="secondary", use_container_width=True):
+        if st.button("Browse catalog", use_container_width=True):
             st.session_state.selected_menu = "database"
             st.rerun()
 
 elif menu_options[selected_menu] == "tracker":
-    st.markdown("### 🛰️ Advanced Satellite Pass Predictor")
-    st.markdown("Predict and analyze satellite passes with high precision and real-time data")
+    st.markdown("### Pass predictor")
 
     # Control Panel
     with st.container():
-        st.markdown('<div class="control-panel">', unsafe_allow_html=True)
 
         # Location Settings
-        st.markdown("#### 📍 Observer Location")
+        st.markdown("#### Observer Location")
         col1, col2, col3 = st.columns(3)
         with col1:
             lat = st.number_input(
@@ -339,7 +194,7 @@ elif menu_options[selected_menu] == "tracker":
             )
 
         # Satellite Selection
-        st.markdown("#### 🛰️ Satellite Selection")
+        st.markdown("#### Satellite Selection")
         satellite_options = {
             "International Space Station (ISS)": 25544,
             "Hubble Space Telescope": 20580,
@@ -366,10 +221,10 @@ elif menu_options[selected_menu] == "tracker":
             )
         else:
             norad = satellite_options[selected_sat]
-            st.info(f"📡 NORAD ID: {norad}")
+            st.info(f"NORAD ID: {norad}")
 
         # Prediction Parameters
-        st.markdown("#### ⚙️ Prediction Settings")
+        st.markdown("#### Prediction Settings")
         col1, col2, col3 = st.columns(3)
         with col1:
             hours_ahead = st.slider(
@@ -397,13 +252,12 @@ elif menu_options[selected_menu] == "tracker":
                 help="Smaller values = more accurate but slower"
             )
 
-        st.markdown('</div>', unsafe_allow_html=True)
 
     # Prediction Button
     col1, col2, col3 = st.columns([1, 2, 1])
     with col2:
         predict_btn = st.button(
-            "🚀 Compute Satellite Passes",
+            "Predict passes",
             type="primary",
             use_container_width=True,
             help="Calculate upcoming satellite passes for your location"
@@ -411,21 +265,21 @@ elif menu_options[selected_menu] == "tracker":
 
     if predict_btn:
         st.session_state.tracker_results = None
-        with st.spinner("🔄 Fetching TLE data and computing passes..."):
+        with st.spinner("Fetching TLE data and computing passes..."):
             try:
                 progress_bar = st.progress(0)
                 status_text = st.empty()
 
-                status_text.text("📡 Fetching satellite TLE data...")
+                status_text.text("Fetching satellite TLE data...")
                 progress_bar.progress(20)
                 name, l1, l2 = get_tle(int(norad))
 
-                status_text.text("🛰️ Creating satellite model...")
+                status_text.text("Creating satellite model...")
                 progress_bar.progress(40)
                 ts = load.timescale()
                 sat = EarthSatellite(l1, l2, name, ts)
 
-                status_text.text("⚡ Computing pass predictions...")
+                status_text.text("Computing pass predictions...")
                 progress_bar.progress(60)
                 start_time_comp = time.time()
                 passes = compute_passes_optimized(
@@ -434,7 +288,7 @@ elif menu_options[selected_menu] == "tracker":
                 computation_time = time.time() - start_time_comp
 
                 progress_bar.progress(100)
-                status_text.text("✅ Computation completed!")
+                status_text.text("Computation completed!")
                 time.sleep(0.5)
                 progress_bar.empty()
                 status_text.empty()
@@ -472,7 +326,7 @@ elif menu_options[selected_menu] == "tracker":
                     st.session_state.tracker_results = {"name": name, "empty": True}
 
             except Exception as e:
-                st.error(f"❌ Error during computation: {str(e)}")
+                st.error(f"Error during computation: {str(e)}")
                 st.info("Please check your inputs and try again.")
 
     # Render results (persists across reruns — not wiped by widget interactions)
@@ -482,7 +336,7 @@ elif menu_options[selected_menu] == "tracker":
         if res.get("empty"):
             st.warning("No satellite passes found in the selected time window.")
             st.markdown("""
-            **💡 Suggestions to find more passes:**
+            **Suggestions to find more passes:**
             - Reduce the minimum elevation angle
             - Increase the search time window
             - Try a different satellite
@@ -507,7 +361,7 @@ elif menu_options[selected_menu] == "tracker":
             with col4:
                 st.metric("Computation Time", f"{res['computation_time']:.2f}s")
 
-            st.markdown("#### 📋 Pass Schedule")
+            st.markdown("#### Pass Schedule")
             df = pd.DataFrame(pass_data)
             st.dataframe(
                 df,
@@ -521,14 +375,14 @@ elif menu_options[selected_menu] == "tracker":
             )
 
             st.download_button(
-                label="📥 Download Pass Data (CSV)",
+                label="Download Pass Data (CSV)",
                 data=res["csv_data"],
                 file_name=f"{name.replace(' ', '_')}_passes.csv",
                 mime="text/csv",
                 key="download-csv"
             )
 
-            st.markdown("#### 📊 Pass Visualization")
+            st.markdown("#### Pass Visualization")
             fig = go.Figure()
             for i, p in enumerate(chart_data):
                 fig.add_trace(go.Scatter(
@@ -549,16 +403,14 @@ elif menu_options[selected_menu] == "tracker":
             st.plotly_chart(fig, use_container_width=True)
 
 elif menu_options[selected_menu] == "visualizer":
-    st.markdown("### 🗺️ Advanced Ground Track Visualizer")
-    st.markdown("Visualize satellite orbital paths and ground tracks with interactive maps and 3D visualization")
+    st.markdown("### Ground track")
 
     # Enhanced controls
     with st.container():
-        st.markdown('<div class="control-panel">', unsafe_allow_html=True)
 
         col1, col2 = st.columns(2)
         with col1:
-            st.markdown("#### 🛰️ Satellite Selection")
+            st.markdown("#### Satellite Selection")
             viz_satellite_options = {
                 "International Space Station (ISS)": 25544,
                 "Hubble Space Telescope": 20580,
@@ -585,10 +437,10 @@ elif menu_options[selected_menu] == "visualizer":
                 )
             else:
                 viz_norad = viz_satellite_options[selected_viz_sat]
-                st.info(f"📡 NORAD ID: {viz_norad}")
+                st.info(f"NORAD ID: {viz_norad}")
 
         with col2:
-            st.markdown("#### ⏱️ Visualization Settings")
+            st.markdown("#### ⏱Visualization Settings")
             track_hours = st.slider(
                 "Track Duration (hours)",
                 min_value=1,
@@ -612,29 +464,28 @@ elif menu_options[selected_menu] == "visualizer":
                 help="Display current satellite position on the map"
             )
 
-        st.markdown('</div>', unsafe_allow_html=True)
 
     # Generate Visualization Button
     col1, col2, col3 = st.columns([1, 2, 1])
     with col2:
         viz_btn = st.button(
-            "🗺️ Generate Ground Track",
+            "Generate track",
             type="primary",
             use_container_width=True
         )
 
     if viz_btn:
         st.session_state.viz_results = None
-        with st.spinner("🔄 Computing orbital trajectory..."):
+        with st.spinner("Computing orbital trajectory..."):
             try:
                 progress_bar = st.progress(0)
                 status_text = st.empty()
 
-                status_text.text("📡 Fetching satellite data...")
+                status_text.text("Fetching satellite data...")
                 progress_bar.progress(20)
                 name, l1, l2 = get_tle(int(viz_norad))
 
-                status_text.text("🛰️ Computing orbital path...")
+                status_text.text("Computing orbital path...")
                 progress_bar.progress(50)
                 ts = load.timescale()
                 sat = EarthSatellite(l1, l2, name, ts)
@@ -661,7 +512,7 @@ elif menu_options[selected_menu] == "visualizer":
                     }
 
                 progress_bar.progress(100)
-                status_text.text("✅ Track computation completed!")
+                status_text.text("Track computation completed!")
                 time.sleep(0.5)
                 progress_bar.empty()
                 status_text.empty()
@@ -678,7 +529,7 @@ elif menu_options[selected_menu] == "visualizer":
                 }
 
             except Exception as e:
-                st.error(f"❌ Error generating visualization: {str(e)}")
+                st.error(f"Error generating visualization: {str(e)}")
                 st.info("Please check your inputs and try again.")
 
     # Render results — lives outside if-block so it persists across reruns
@@ -705,7 +556,7 @@ elif menu_options[selected_menu] == "visualizer":
         with col4:
             st.metric("Longitude Range", f"{min(lons):.1f}° to {max(lons):.1f}°")
 
-        st.markdown("#### 🌍 Interactive Ground Track Map")
+        st.markdown("#### Interactive Ground Track Map")
         m = folium.Map(location=[lats[0], lons[0]], zoom_start=2, tiles='CartoDB positron')
         folium.PolyLine(list(zip(lats, lons)), color="#FF6B6B", weight=3, opacity=0.8).add_to(m)
         folium.Marker(
@@ -727,7 +578,7 @@ elif menu_options[selected_menu] == "visualizer":
         # returned_objects=[] prevents map interactions from triggering a full rerun
         st_folium(m, width=None, height=500, returned_objects=[])
 
-        st.markdown("#### 📈 Altitude Profile")
+        st.markdown("#### Altitude Profile")
         fig = go.Figure()
         fig.add_trace(go.Scatter(
             x=timestamp_strs, y=alts, mode='lines', name='Altitude',
@@ -740,7 +591,7 @@ elif menu_options[selected_menu] == "visualizer":
         )
         st.plotly_chart(fig, use_container_width=True)
 
-        st.markdown("#### 🌐 3D Orbital Path")
+        st.markdown("#### 3D Orbital Path")
         fig_3d = go.Figure(data=[go.Scatter3d(
             x=lons, y=lats, z=alts, mode='lines',
             line={"color": '#FF6B6B', "width": 4}, name='Orbital Path'
@@ -756,7 +607,7 @@ elif menu_options[selected_menu] == "visualizer":
         )
         st.plotly_chart(fig_3d, use_container_width=True)
 
-        st.markdown("#### 💾 Export Data")
+        st.markdown("#### Export Data")
         col1, col2 = st.columns(2)
         with col1:
             track_df = pd.DataFrame({
@@ -764,27 +615,25 @@ elif menu_options[selected_menu] == "visualizer":
                 'Longitude': lons, 'Altitude_km': alts
             })
             st.download_button(
-                label="📥 Download Track Data (CSV)",
+                label="Download Track Data (CSV)",
                 data=track_df.to_csv(index=False),
                 file_name=f"{name.replace(' ', '_')}_ground_track.csv",
                 mime="text/csv", key="download-track"
             )
         with col2:
-            if st.button("🗑️ Clear / New Track"):
+            if st.button("Clear / New Track"):
                 st.session_state.viz_results = None
                 st.rerun()
 
 elif menu_options[selected_menu] == "database":
-    st.markdown("### 📊 Satellite Database Explorer")
-    st.markdown("Browse, search, and analyze satellites from the Celestrak database")
+    st.markdown("### Catalog")
 
     # Database controls
     with st.container():
-        st.markdown('<div class="control-panel">', unsafe_allow_html=True)
 
         col1, col2, col3 = st.columns(3)
         with col1:
-            st.markdown("#### 🔍 Search & Filter")
+            st.markdown("#### Search & Filter")
             search_term = st.text_input(
                 "Search satellites",
                 placeholder="Enter satellite name or NORAD ID...",
@@ -798,7 +647,7 @@ elif menu_options[selected_menu] == "database":
             )
 
         with col2:
-            st.markdown("#### 📊 Display Options")
+            st.markdown("#### Display Options")
             sort_by = st.selectbox(
                 "Sort by",
                 ["Name", "NORAD ID", "Launch Date", "Period"],
@@ -814,11 +663,10 @@ elif menu_options[selected_menu] == "database":
             )
 
         with col3:
-            st.markdown("#### 📈 Statistics")
+            st.markdown("#### Statistics")
             show_stats = st.checkbox("Show Database Statistics", value=True)
             show_active_only = st.checkbox("Active Satellites Only", value=True)
 
-        st.markdown('</div>', unsafe_allow_html=True)
 
     # Load satellite database (simplified - in real app, this would fetch from Celestrak)
     if 'satellite_db' not in st.session_state:
@@ -887,7 +735,7 @@ elif menu_options[selected_menu] == "database":
             st.metric("Top Category", f"{most_common[0]} ({most_common[1]})")
 
     # Display satellite list
-    st.markdown(f"#### 🛰️ Satellite Catalog ({len(filtered_db)} results)")
+    st.markdown(f"#### Satellite Catalog ({len(filtered_db)} results)")
 
     if filtered_db:
         # Create display dataframe
@@ -897,7 +745,7 @@ elif menu_options[selected_menu] == "database":
                 "NORAD ID": sat['norad'],
                 "Name": sat['name'],
                 "Category": sat['category'],
-                "Status": "🟢 Active" if sat['active'] else "🔴 Inactive",
+                "Status": "Active" if sat['active'] else "Inactive",
                 "Launch Date": sat['launch_date'],
                 "Actions": ""
             })
@@ -920,17 +768,17 @@ elif menu_options[selected_menu] == "database":
         )
 
         # Action buttons for each satellite
-        st.markdown("#### 🎯 Quick Actions")
+        st.markdown("#### Quick Actions")
         cols = st.columns(4)
         selected_satellites = []
 
         for i, sat in enumerate(filtered_db[:8]):  # Show first 8
             with cols[i % 4]:
-                if st.button(f"📊 Predict {sat['name'][:15]}...", key=f"predict_{sat['norad']}", use_container_width=True):
+                if st.button(f"Predict {sat['name'][:15]}...", key=f"predict_{sat['norad']}", use_container_width=True):
                     st.session_state.selected_satellite = sat['norad']
                     st.session_state.selected_menu = "tracker"
                     st.rerun()
-                if st.button(f"🗺️ Track {sat['name'][:15]}...", key=f"track_{sat['norad']}", use_container_width=True):
+                if st.button(f"Track {sat['name'][:15]}...", key=f"track_{sat['norad']}", use_container_width=True):
                     st.session_state.selected_satellite = sat['norad']
                     st.session_state.selected_menu = "visualizer"
                     st.rerun()
@@ -939,10 +787,10 @@ elif menu_options[selected_menu] == "database":
         st.markdown("---")
         col1, col2, col3 = st.columns(3)
         with col1:
-            if st.button("📊 Batch Pass Prediction", type="primary"):
+            if st.button("Batch Pass Prediction", type="primary"):
                 st.info("Batch prediction feature coming soon!")
         with col2:
-            if st.button("📥 Export Database"):
+            if st.button("Export Database"):
                 csv_db = pd.DataFrame(filtered_db).to_csv(index=False)
                 st.download_button(
                     label="Download CSV",
@@ -952,7 +800,7 @@ elif menu_options[selected_menu] == "database":
                     key="download-db"
                 )
         with col3:
-            if st.button("🔄 Refresh Database"):
+            if st.button("Refresh Database"):
                 with st.spinner("Refreshing satellite data..."):
                     time.sleep(1)
                     st.success("Database refreshed!")
@@ -962,7 +810,7 @@ elif menu_options[selected_menu] == "database":
 
     # Satellite details section
     if st.checkbox("Show Satellite Details", value=False):
-        st.markdown("#### 📋 Satellite Information")
+        st.markdown("#### Satellite Information")
         st.markdown("""
         **NORAD ID**: Unique identifier assigned by North American Aerospace Defense Command
         **TLE**: Two-Line Element set containing orbital parameters
@@ -976,14 +824,14 @@ elif menu_options[selected_menu] == "database":
         """)
 
 elif menu_options[selected_menu] == "settings":
-    st.markdown("### ⚙️ Application Settings")
+    st.markdown("### Settings")
     st.markdown("Configure your preferences and customize the Space Exploration AI experience")
 
     # Settings tabs
-    tab1, tab2, tab3, tab4 = st.tabs(["🌍 Location", "🛰️ Preferences", "🎨 Appearance", "🔧 Advanced"])
+    tab1, tab2, tab3, tab4 = st.tabs(["Location", "Preferences", "Appearance", "Advanced"])
 
     with tab1:
-        st.markdown("#### 📍 Default Location Settings")
+        st.markdown("#### Default Location Settings")
         st.markdown("Set your default observation location for quick access")
 
         col1, col2 = st.columns(2)
@@ -1019,7 +867,7 @@ elif menu_options[selected_menu] == "settings":
                 help="Friendly name for your location"
             )
 
-        if st.button("💾 Save Location Settings", type="primary"):
+        if st.button("Save Location Settings", type="primary"):
             st.session_state.default_location = {
                 "lat": default_lat,
                 "lon": default_lon,
@@ -1029,7 +877,7 @@ elif menu_options[selected_menu] == "settings":
             st.success("Location settings saved!")
 
         # Quick location presets
-        st.markdown("#### 🌍 Quick Location Presets")
+        st.markdown("#### Quick Location Presets")
         preset_locations = {
             "New Delhi, India": (28.6139, 77.2090, 0),
             "London, UK": (51.5074, -0.1278, 0),
@@ -1042,14 +890,14 @@ elif menu_options[selected_menu] == "settings":
         cols = st.columns(2)
         for i, (name, (lat, lon, alt)) in enumerate(preset_locations.items()):
             with cols[i % 2]:
-                if st.button(f"📍 {name}", key=f"preset_{i}"):
+                if st.button(f"{name}", key=f"preset_{i}"):
                     st.session_state.default_location = {
                         "lat": lat, "lon": lon, "alt": alt, "name": name
                     }
                     st.success(f"Set location to {name}")
 
     with tab2:
-        st.markdown("#### 🛰️ Prediction Preferences")
+        st.markdown("#### Prediction Preferences")
         st.markdown("Customize default settings for satellite pass predictions")
 
         col1, col2 = st.columns(2)
@@ -1083,7 +931,7 @@ elif menu_options[selected_menu] == "settings":
                 help="Automatically refresh satellite data when cached"
             )
 
-        if st.button("💾 Save Prediction Settings", type="primary"):
+        if st.button("Save Prediction Settings", type="primary"):
             st.session_state.prediction_settings = {
                 "hours": default_hours,
                 "min_elev": default_min_elev,
@@ -1093,7 +941,7 @@ elif menu_options[selected_menu] == "settings":
             st.success("Prediction settings saved!")
 
     with tab3:
-        st.markdown("#### 🎨 Appearance & Theme")
+        st.markdown("#### Appearance & Theme")
         st.markdown("Customize the look and feel of the application")
 
         theme_options = st.selectbox(
@@ -1117,7 +965,7 @@ elif menu_options[selected_menu] == "settings":
             help="Color scheme for charts and plots"
         )
 
-        if st.button("💾 Save Appearance Settings", type="primary"):
+        if st.button("Save Appearance Settings", type="primary"):
             st.session_state.appearance_settings = {
                 "theme": theme_options,
                 "map_style": map_style,
@@ -1126,7 +974,7 @@ elif menu_options[selected_menu] == "settings":
             st.success("Appearance settings saved!")
 
     with tab4:
-        st.markdown("#### 🔧 Advanced Settings")
+        st.markdown("#### Advanced Settings")
         st.markdown("Advanced configuration options for power users")
 
         st.markdown("**Performance Settings**")
@@ -1165,7 +1013,7 @@ elif menu_options[selected_menu] == "settings":
             help="Default format for data exports"
         )
 
-        if st.button("💾 Save Advanced Settings", type="primary"):
+        if st.button("Save Advanced Settings", type="primary"):
             st.session_state.advanced_settings = {
                 "max_cache_age": max_cache_age,
                 "parallel_processing": parallel_processing,
@@ -1179,11 +1027,11 @@ elif menu_options[selected_menu] == "settings":
         st.markdown("---")
         col1, col2, col3 = st.columns(3)
         with col1:
-            if st.button("🔄 Reset to Defaults", type="secondary"):
+            if st.button("Reset to Defaults", type="secondary"):
                 st.session_state.clear()
                 st.success("All settings reset to defaults!")
         with col2:
-            if st.button("💾 Export Settings", type="secondary"):
+            if st.button("Export Settings", type="secondary"):
                 settings_data = {
                     "location": st.session_state.get("default_location", {}),
                     "prediction": st.session_state.get("prediction_settings", {}),
@@ -1214,23 +1062,27 @@ elif menu_options[selected_menu] == "settings":
                     st.error(f"Error importing settings: {e}")
 
 elif menu_options[selected_menu] == "about":
-    st.markdown("### 👨‍💻 About Space Exploration AI")
+    st.markdown("### About")
     st.markdown("Advanced satellite pass prediction and orbital analytics platform")
 
     # Developer info
     col1, col2 = st.columns([1, 2])
     with col1:
-        st.image("https://via.placeholder.com/200x200/667eea/white?text=Yuva", width=200)
+        st.markdown('<div class="monogram">Y</div>', unsafe_allow_html=True)
     with col2:
-        st.markdown("#### Yuva")
-        st.markdown("**Computer Science Student & AI Specialist**")
-        st.markdown("📧 astroyuvinut@gmail.com")
-        st.markdown("🚀 Passionate about space exploration technologies and astrodynamics")
-        st.markdown("💡 Creator of Space Exploration AI - making satellite observation accessible to everyone")
+        st.markdown("""
+        <div class="byline">
+            <div class="name">Yuva</div>
+            <div class="role">Computer science student, orbital mechanics</div>
+            <p>Builds tools that make satellite observation approachable —
+            the maths is well understood, the interfaces usually are not.</p>
+            <a href="mailto:astroyuvinut@gmail.com">astroyuvinut@gmail.com</a>
+        </div>
+        """, unsafe_allow_html=True)
 
     # Project info
     st.markdown("---")
-    st.markdown("#### 🚀 Project Overview")
+    st.markdown("#### Project Overview")
     st.markdown("""
     **Space Exploration AI** is a comprehensive platform that integrates:
 
@@ -1242,7 +1094,7 @@ elif menu_options[selected_menu] == "about":
     """)
 
     # Technical stack
-    st.markdown("#### 🛠️ Technical Stack")
+    st.markdown("#### Technical Stack")
     tech_cols = st.columns(4)
     technologies = [
         ("Python", "Core programming language"),
@@ -1261,17 +1113,17 @@ elif menu_options[selected_menu] == "about":
             st.caption(desc)
 
     # Features showcase
-    st.markdown("#### ✨ Key Features")
+    st.markdown("#### Key Features")
     feature_cols = st.columns(2)
     features = [
-        ("🛰️ Real-Time Tracking", "Live satellite position monitoring"),
-        ("📊 Advanced Predictions", "High-precision pass calculations"),
-        ("🗺️ Orbital Visualization", "Interactive 2D/3D trajectory maps"),
-        ("📡 TLE Integration", "Direct Celestrak database access"),
-        ("⚡ Performance Optimized", "Vectorized computations and caching"),
-        ("📱 Responsive Design", "Works on desktop and mobile devices"),
-        ("💾 Data Export", "CSV/JSON export capabilities"),
-        ("🔬 Scientific Accuracy", "Research-grade orbital calculations")
+        ("Real-Time Tracking", "Live satellite position monitoring"),
+        ("Advanced Predictions", "High-precision pass calculations"),
+        ("Orbital Visualization", "Interactive 2D/3D trajectory maps"),
+        ("TLE Integration", "Direct Celestrak database access"),
+        ("Performance Optimized", "Vectorized computations and caching"),
+        ("Responsive Design", "Works on desktop and mobile devices"),
+        ("Data Export", "CSV/JSON export capabilities"),
+        ("Scientific Accuracy", "Research-grade orbital calculations")
     ]
 
     for i, (feature, desc) in enumerate(features):
@@ -1285,14 +1137,14 @@ elif menu_options[selected_menu] == "about":
         st.metric("Version", "2.0.0")
         st.caption("Latest release")
     with col2:
-        if st.button("📖 Documentation", type="secondary"):
+        if st.button("Documentation", type="secondary"):
             st.info("Documentation coming soon!")
     with col3:
-        if st.button("🐛 Report Issue", type="secondary"):
+        if st.button("Report Issue", type="secondary"):
             st.info("GitHub repository: https://github.com/your-repo/space-expo")
 
     # Acknowledgments
-    st.markdown("#### 🙏 Acknowledgments")
+    st.markdown("#### Acknowledgments")
     st.markdown("""
     - **Celestrak**: For providing comprehensive satellite TLE data
     - **Skyfield**: For the excellent orbital mechanics library
@@ -1301,7 +1153,7 @@ elif menu_options[selected_menu] == "about":
     """)
 
     # Vision statement
-    st.markdown("#### 🌟 Vision")
+    st.markdown("#### Vision")
     st.markdown("""
     > "To democratize access to space observation data and make astrodynamics
     > accessible to researchers, educators, and space enthusiasts worldwide.
